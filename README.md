@@ -18,7 +18,7 @@ vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
  2.2 ```simulated genome``` *and* ```simulated target file```
 
-## Simulate the control genome and target
+## Visualize the control genome and target
 ## Step 2:
 3. Inputs: ```control genome``` *and* ```target file```
 
@@ -52,7 +52,7 @@ vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 10. Output: visualization of the reads to the ```control genome``` passed in the first step.
 
 
-## Simulate the simulated control genome and simulated target
+## Visualize the simulated control genome and simulated target
 Repeat steps **2** through **5** and compare the visualization for the two ..
 
 # How it works?
