@@ -1,0 +1,30 @@
+# ignore input_data folder
+"0. input_data"
+# except
+!"0. input_data/README.md"
+
+# ignore cnv_simulator
+"1. cnv_simulator"
+# except
+!"1. cnv_simulator/README.md"
+!"2. cnv_simulator/cnv-sim.py"
+
+# ignore wessim
+"2. wessim"
+# except
+!"2. wessim/README.md"
+
+# ignore bwa_aligner
+"3. bwa_aligner"
+# except
+!"3. bwa_aligner/README.md"
+
+# ignore samtools
+"4. samtools"
+# except
+!"4. samtools/README.md"
+
+# ignore igv_browser
+"5. igv_browser"
+# except
+!"5. igv_browser/README.md"
