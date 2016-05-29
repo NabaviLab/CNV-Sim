@@ -1,7 +1,7 @@
-# ignore input_data folder
-0.\ input_data
+# ignore input folder
+input
 # except
-!0.\ input_data/README.md
+!input/README.md
 
 # ignore cnv_simulator
 1.\ cnv_simulator
@@ -33,4 +33,8 @@
 !5.\ igv_browser/README.md
 !5.\ igv_browser/setup-igv.sh
 
+# ignore output folder
+output
+# except
+!*.md
 .*
