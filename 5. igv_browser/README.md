@@ -3,4 +3,4 @@ The Integrative Genomics Viewer (IGV) is a high-performance visualization tool t
 
 ## Download IGV
 Download the package from the official site: [https://www.broadinstitute.org/igv/](https://www.broadinstitute.org/igv/).
-Alternatively, you can run the script setup-igv.sh to download the required packages.
+Alternatively, you can run the script ```setup-igv.sh``` to download the required packages.
