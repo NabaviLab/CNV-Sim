@@ -6,3 +6,7 @@ tar -xvzf bwa-0.7.13.tar.bz2
 rm bwa-0.7.13.tar.bz2
 mv bwa-0.7.13/ bwa
 
+# Install
+cd bwa
+make
+
