@@ -3,24 +3,30 @@
 mkdir tmp
 cd tmp
 
-# Install general dependencies (Mac OS only)
+# INSTALL GENERAL DEPENDENCIES (Mac OS)
+
 # Homebrew
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-# Python
+# python
 brew install python
 
-# PIP
+# pip
 curl -O http://python-distribute.org/distribute_setup.py
 python distribute_setup.py
 curl -O https://raw.github.com/pypa/pip/master/contrib/get-pip.py
 python get-pip.py
 
 # wget
-homebrew install wget
+brew install wget
 
 # git
 brew install git
 
-# Clean after installation
+# clean after installation
 rm -t tmp
+
+# java
+brew tap caskroom/cask
+brew install brew-cask
+brew cask install java
