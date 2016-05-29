@@ -1,5 +1,3 @@
-.*
-
 # ignore input_data folder
 0.\ input_data
 # except
@@ -20,8 +18,8 @@
 # ignore bwa_aligner
 3.\ bwa_aligner
 # except
-!3.\ bwa_aligner/README.md
 !3.\ bwa_aligner/setup-bwa.sh
+!3.\ bwa_aligner/README.md
 
 # ignore samtools
 4.\ samtools
@@ -32,3 +30,5 @@
 5.\ igv_browser
 # except
 !5.\ igv_browser/README.md
+
+.*
