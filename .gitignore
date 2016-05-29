@@ -21,6 +21,7 @@
 3.\ bwa_aligner
 # except
 !3.\ bwa_aligner/README.md
+!3.\ bwa_aligner/setup-bwa.sh
 
 # ignore samtools
 4.\ samtools
