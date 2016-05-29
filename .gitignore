@@ -31,5 +31,6 @@
 5.\ igv_browser
 # except
 !5.\ igv_browser/README.md
+!5.\ igv_browser/setup-igv.sh
 
 .*
