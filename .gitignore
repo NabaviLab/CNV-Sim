@@ -8,6 +8,7 @@ input
 # except
 !1.\ cnv_simulator/README.md
 !1.\ cnv_simulator/cnv-sim.py
+!1.\ cnv_simulator/setup-cnvsim.sh
 
 # ignore wessim
 2.\ wessim
