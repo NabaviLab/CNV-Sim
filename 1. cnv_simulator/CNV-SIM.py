@@ -5,7 +5,7 @@ __author__ = 'Abdelrahman Hosny'
 import sys
 import os.path
 import random
-from operator import itemgetter
+from shutil import copyfile
 
 def readGenome(filename):
     '''
@@ -34,17 +34,14 @@ def readTargets(filename):
     exons = []
     with open(filename, 'r') as tf:
         for line in tf:
-            chromosome, start, end, description, score, strand = line.strip().split('\t')
+            chromosome, start, end = line.strip().split('\t')
             exon = {"chromosome": chromosome, \
                     "start": int(start), \
-                    "end": int(end), \
-                    "description": description, \
-                    "score": score, \
-                    "strand": strand}
+                    "end": int(end)}
             exons.append(exon)
     return exons
 
-def generateCNVMask(number_of_exons, p_amplify=0.3, p_delete=0.2):
+def generateCNVMask(number_of_exons, p_amplify=0.5, p_delete=0.0):
     '''
     This function generates random Copy Number Variations mask list
     :param exons: list of exons.
@@ -86,52 +83,90 @@ def saveCNVList(exons, cnv_mask, filename):
     :param cnv_mask: a list of changes from the function generateCNVMask
     :return: True when the the write to file process is successful
     '''
+    cnv_list = []
     with open(filename, 'w') as f:
         for i in range(0, len(exons)):
             line = exons[i]["chromosome"] + '\t' \
                     + str(exons[i]["start"]) + '\t' \
                     + str(exons[i]["end"]) + '\t' \
-                    + exons[i]["description"] + '\t' \
-                    + exons[i]["score"] + '\t' \
-                    + exons[i]["strand"] + '\t' \
                     + str(cnv_mask[i]) + '\n'
             f.write(line)
-    return True
+            cnv_instance = (exons[i]["chromosome"], exons[i]["start"], exons[i]["end"], cnv_mask[i])
+            cnv_list.append(cnv_instance)
+    return cnv_list
 
+def simulateCNV(genome, cnv_list):
+    '''
+    This function updates the genome with copy number variations indicated in the CNV list
+    :param genome: text string of the genome
+    :param cnv_list: a list of tuples containing (chromosome, start, end, variation)
+    :return: modified genome and modified target list
+    '''
+    ADJUST = 0          # a value used to adjust the start and end positions of all targets
+    cnv_genome = genome[:]
+    cnv_targets = []
+    for cnv in cnv_list:
+        start, end = ADJUST + cnv[1], ADJUST + cnv[2]
+        number_of_copies = cnv[3]
+        exon_string = cnv_genome[start:end]
+
+        # modify the genome
+        for _ in range(number_of_copies):
+            cnv_genome = cnv_genome[:end] + exon_string + cnv_genome[end:]
+
+        # modify the target list
+        new_exon_start = start
+        new_exon_end = end + (len(exon_string) * number_of_copies)
+        exon = (cnv[0], new_exon_start, new_exon_end)
+        cnv_targets.append(exon)
+
+        # modify the global ADJUST value so that the next iteration we capture the correct exon
+        ADJUST += len(exon_string) * number_of_copies
+
+    return cnv_genome, cnv_targets
+
+# Required Input
 genome_file = sys.argv[1]
 target_file = sys.argv[2]
 simulation_name = sys.argv[3]
 
-genome = readGenome(genome_file)
-exons = readTargets(target_file)
-exons = sorted(exons, key=itemgetter("start"))
-
-
-modified_genome_file = os.path.dirname(os.path.realpath(__file__)) + '/../output/cnvsim_output/'
-modified_target_file = os.path.dirname(os.path.realpath(__file__)) + '/../output/cnvsim_output/'
+# Output by CNV Simulator
 cnv_list_file = os.path.dirname(os.path.realpath(__file__)) + '/../output/cnvsim_output/' + simulation_name + '-CNVList.bed'
+control_genome_file = os.path.dirname(os.path.realpath(__file__)) + '/../output/cnvsim_output/' + simulation_name + '-ControlGenome.fa'
+control_target_file = os.path.dirname(os.path.realpath(__file__)) + '/../output/cnvsim_output/' + simulation_name + '-ControlTarget.bed'
+cnv_genome_file = os.path.dirname(os.path.realpath(__file__)) + '/../output/cnvsim_output/' + simulation_name + '-CNVGenome.fa'
+cnv_target_file = os.path.dirname(os.path.realpath(__file__)) + '/../output/cnvsim_output/' + simulation_name + '-CNVTarget.bed'
 
+print "reading genome file .."
+header, genome = readGenome(genome_file)
+print "successfully read a genome of length " + str(len(genome))
+
+print "reading target file .."
+exons = readTargets(target_file)
+print "successfully loaded " + str(len(exons)) + " exonic regions"
+
+print "generating CNV list .."
 cnv_mask = generateCNVMask(len(exons))
-saveCNVList(exons, cnv_mask, cnv_list_file)
+cnv_list = saveCNVList(exons, cnv_mask, cnv_list_file)
+print "CNV list saved to " + cnv_list_file
 
+print "generating the control genome file .."
+copyfile(genome_file, control_genome_file)
+print "generating the control target file .."
+copyfile(target_file, control_target_file)
+print "Control files saved to " + os.path.dirname(os.path.realpath(__file__)) + '/../output/cnvsim_output/'
 
-'''
-# now write results to files
-with open(modified_genome_file, 'w') as f:
-    f.write(header)
-    line_width = 50
-    chunks = [modified_genome[i:i+line_width]+'\n' for i in range(0, len(genome), line_width)]
-    f.writelines(chunks)
-
-with open(modified_target_file, 'w') as f:
-    targets = []
-    for ex in exons:
-        target = ex["chromosome"] + '\t' \
-                 + str(ex["start"]) + \
-                 '\t' + str(ex["end"]) + \
-                 '\t' + ex["description"] + \
-                 '\t' + ex["score"] + \
-                 '\t' + ex["strand"] + '\n'
-        targets.append(target)
-    f.writelines(targets)
-    '''
+print "simulating copy number variations using the generated control files"
+cnv_genome, cnv_target_list = simulateCNV(genome, cnv_list)
+print len(cnv_genome)
+print cnv_target_list
+print "generating the cnv genome file .."
+with open(cnv_genome_file, 'w') as fw:
+    fw.write(header + "\n")
+    fw.write(cnv_genome)
+print "generating the cnv target file .."
+with open(cnv_target_file, 'w') as tw:
+    for target in cnv_target_list:
+        line = target[0] + "\t" + str(target[1]) + "\t" + str(target[2]) + "\n"
+        tw.write(line)
+print "Control files saved to " + os.path.dirname(os.path.realpath(__file__)) + '/../output/cnvsim_output/'
