@@ -110,18 +110,26 @@ def simulateCNV(genome, cnv_list):
         number_of_copies = cnv[3]
         exon_string = cnv_genome[start:end]
 
-        # modify the genome
-        for _ in range(number_of_copies):
-            cnv_genome = cnv_genome[:end] + exon_string + cnv_genome[end:]
+        if number_of_copies == -1:        # 1 deletion (later on, we will implement multiple deletion)
+            # modify the genome
+            cnv_genome = cnv_genome[:start] + cnv_genome[end:]
 
-        # modify the target list
-        new_exon_start = start
-        new_exon_end = end + (len(exon_string) * number_of_copies)
-        exon = (cnv[0], new_exon_start, new_exon_end)
-        cnv_targets.append(exon)
+            # modify the global ADJUST value so that the next iteration we capture the correct exon
+            ADJUST -= len(exon_string)
 
-        # modify the global ADJUST value so that the next iteration we capture the correct exon
-        ADJUST += len(exon_string) * number_of_copies
+        elif number_of_copies >= 0:        # amplifications
+            # modify the genome
+            for _ in range(number_of_copies):
+                cnv_genome = cnv_genome[:end] + exon_string + cnv_genome[end:]
+
+            # modify the target list
+            new_exon_start = start
+            new_exon_end = end + (len(exon_string) * number_of_copies)
+            exon = (cnv[0], new_exon_start, new_exon_end)
+            cnv_targets.append(exon)
+
+            # modify the global ADJUST value so that the next iteration we capture the correct exon
+            ADJUST += len(exon_string) * number_of_copies
 
     return cnv_genome, cnv_targets
 
@@ -158,8 +166,7 @@ print "Control files saved to " + os.path.dirname(os.path.realpath(__file__)) + 
 
 print "simulating copy number variations using the generated control files"
 cnv_genome, cnv_target_list = simulateCNV(genome, cnv_list)
-print len(cnv_genome)
-print cnv_target_list
+
 print "generating the cnv genome file .."
 with open(cnv_genome_file, 'w') as fw:
     fw.write(header + "\n")
