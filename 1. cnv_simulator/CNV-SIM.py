@@ -41,7 +41,7 @@ def readTargets(filename):
             exons.append(exon)
     return exons
 
-def generateCNVMask(number_of_exons, p_amplify=0.5, p_delete=0.0):
+def generateCNVMask(number_of_exons, p_amplify=0.005, p_delete=0.0):
     '''
     This function generates random Copy Number Variations mask list
     :param exons: list of exons.
@@ -102,10 +102,11 @@ def simulateCNV(genome, cnv_list):
     :param cnv_list: a list of tuples containing (chromosome, start, end, variation)
     :return: modified genome and modified target list
     '''
+    print "total number of targets: " + str(len(cnv_list))
     ADJUST = 0          # a value used to adjust the start and end positions of all targets
     cnv_genome = genome[:]
     cnv_targets = []
-    for cnv in cnv_list:
+    for i, cnv in enumerate(cnv_list):
         start, end = ADJUST + cnv[1], ADJUST + cnv[2]
         number_of_copies = cnv[3]
         exon_string = cnv_genome[start:end]
@@ -130,6 +131,8 @@ def simulateCNV(genome, cnv_list):
 
             # modify the global ADJUST value so that the next iteration we capture the correct exon
             ADJUST += len(exon_string) * number_of_copies
+        if  i % 100 == 0:
+            print "simulated copy number variations: " + str(i) + "/" + str(len(cnv_list))+ " from the target list"
 
     return cnv_genome, cnv_targets
 
