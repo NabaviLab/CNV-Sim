@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-GENOME_FILE=$1
-TARGET_FILE=$2
-EXPERIMENT_NAME=$3
+ORIGINAL_GENOME=$1      # used for alignment
+GENOME_FILE=$2          # used as a reference for reads by wessim
+TARGET_FILE=$3          # used as a target for reads by wessim
+EXPERIMENT_NAME=$4
 CNV_HOME=$(pwd)
 MODEL_FILE=$CNV_HOME'/input/models/ill100v4_p.gzip'
 
@@ -24,8 +25,8 @@ OUTPUT_FILE=$CNV_HOME'/output/bwa_output/'$EXPERIMENT_NAME'.sam'
 
 cd $CNV_HOME
 cd 3.\ bwa_aligner/bwa/
-./bwa index $GENOME_FILE
-./bwa mem -t $NUMBER_OF_THREADS $GENOME_FILE $INPUT_FILE_1 $INPUT_FILE_2 > $OUTPUT_FILE
+./bwa index $ORIGINAL_GENOME
+./bwa mem -t $NUMBER_OF_THREADS $ORIGINAL_GENOME $INPUT_FILE_1 $INPUT_FILE_2 > $OUTPUT_FILE
 
 # Step 3 (SAMTOOLS)
 INPUT_FILE=$CNV_HOME'/output/bwa_output/'$EXPERIMENT_NAME'.sam'
