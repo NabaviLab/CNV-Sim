@@ -17,9 +17,8 @@ python cnv-sim.py $GENOME_FILE $TARGET_FILE'.sorted.merged' $EXPERIMENT_NAME
 
 cd $CNV_HOME
 CONTROL_GENOME=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-ControlGenome.fa'
-CONTROL_TARGET=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-ControlTarget.bed'
-sh wessim-align-sort-vis.sh $CONTROL_GENOME $CONTROL_TARGET 'normal'
 
-CONTROL_GENOME=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-CNVGenome.fa'
+CONTROL_TARGET=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-ControlTarget.bed'
+sh wessim-align-sort-vis.sh $CONTROL_GENOME $CONTROL_TARGET $EXPERIMENT_NAME'.normal'
 CONTROL_TARGET=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-CNVTarget.bed'
-sh wessim-align-sort-vis.sh $CONTROL_GENOME $CONTROL_TARGET 'cnv'
+sh wessim-align-sort-vis.sh $CONTROL_GENOME $CONTROL_TARGET $EXPERIMENT_NAME'.cnv'

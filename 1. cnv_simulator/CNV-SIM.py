@@ -41,7 +41,7 @@ def readTargets(filename):
             exons.append(exon)
     return exons
 
-def generateCNVMask(number_of_exons, p_amplify=0.005, p_delete=0.0):
+def generateCNVMask(number_of_exons, p_amplify=0.5, p_delete=0.0):
     '''
     This function generates random Copy Number Variations mask list
     :param exons: list of exons.
@@ -87,9 +87,9 @@ def saveCNVList(exons, cnv_mask, filename):
     with open(filename, 'w') as f:
         for i in range(0, len(exons)):
             line = exons[i]["chromosome"] + '\t' \
-                    + str(exons[i]["start"]) + '\t' \
-                    + str(exons[i]["end"]) + '\t' \
-                    + str(cnv_mask[i]) + '\n'
+                    + `exons[i]["start"]` + '\t' \
+                    + `exons[i]["end"]` + '\t' \
+                    + `cnv_mask[i]` + '\n'
             f.write(line)
             cnv_instance = (exons[i]["chromosome"], exons[i]["start"], exons[i]["end"], cnv_mask[i])
             cnv_list.append(cnv_instance)
@@ -113,7 +113,8 @@ def simulateCNV(genome, cnv_list):
 
         if number_of_copies == -1:        # 1 deletion (later on, we will implement multiple deletion)
             # modify the genome
-            cnv_genome = cnv_genome[:start] + cnv_genome[end:]
+            list_to_join = [cnv_genome[:start], cnv_genome[end:]]
+            cnv_genome = ''.join(list_to_join)
 
             # modify the global ADJUST value so that the next iteration we capture the correct exon
             ADJUST -= len(exon_string)
@@ -121,7 +122,8 @@ def simulateCNV(genome, cnv_list):
         elif number_of_copies >= 0:        # amplifications
             # modify the genome
             for _ in range(number_of_copies):
-                cnv_genome = cnv_genome[:end] + exon_string + cnv_genome[end:]
+                list_to_join = [cnv_genome[:end], exon_string , cnv_genome[end:]]
+                cnv_genome =  ''.join(list_to_join)
 
             # modify the target list
             new_exon_start = start
@@ -132,7 +134,7 @@ def simulateCNV(genome, cnv_list):
             # modify the global ADJUST value so that the next iteration we capture the correct exon
             ADJUST += len(exon_string) * number_of_copies
         if  i % 100 == 0:
-            print "simulated copy number variations: " + str(i) + "/" + str(len(cnv_list))+ " from the target list"
+            print "simulated copy number variations: " + `i` + "/" + `len(cnv_list)` + " from the target list"
 
     return cnv_genome, cnv_targets
 
@@ -177,6 +179,6 @@ with open(cnv_genome_file, 'w') as fw:
 print "generating the cnv target file .."
 with open(cnv_target_file, 'w') as tw:
     for target in cnv_target_list:
-        line = target[0] + "\t" + str(target[1]) + "\t" + str(target[2]) + "\n"
+        line = target[0] + "\t" + `target[1]` + "\t" + `target[2]` + "\n"
         tw.write(line)
 print "Control files saved to " + os.path.dirname(os.path.realpath(__file__)) + '/../output/cnvsim_output/'

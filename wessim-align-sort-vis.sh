@@ -24,7 +24,7 @@ OUTPUT_FILE=$CNV_HOME'/output/bwa_output/'$EXPERIMENT_NAME'.sam'
 
 cd $CNV_HOME
 cd 3.\ bwa_aligner/bwa/
-# ./bwa index $GENOME_FILE
+./bwa index $GENOME_FILE
 ./bwa mem -t $NUMBER_OF_THREADS $GENOME_FILE $INPUT_FILE_1 $INPUT_FILE_2 > $OUTPUT_FILE
 
 # Step 3 (SAMTOOLS)
