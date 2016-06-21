@@ -4,11 +4,11 @@ ORIGINAL_GENOME=$1      # used for alignment
 GENOME_FILE=$2          # used as a reference for reads by wessim
 TARGET_FILE=$3          # used as a target for reads by wessim
 EXPERIMENT_NAME=$4
+NUMBER_OF_READS=$5
 CNV_HOME=$(pwd)
 MODEL_FILE=$CNV_HOME'/input/models/ill100v4_p.gzip'
 
 # Step 1 (WESSIM)
-NUMBER_OF_READS=2000000
 READ_LENGTH=100
 NUMBER_OF_THREADS=8
 OUTPUT_FILE=$CNV_HOME'/output/wessim_output/'$EXPERIMENT_NAME

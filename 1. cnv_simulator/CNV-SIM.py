@@ -5,7 +5,6 @@ __author__ = 'Abdelrahman Hosny'
 import sys
 import os.path
 import random
-from shutil import copyfile
 
 def readGenome(filename):
     '''
@@ -70,7 +69,7 @@ def generateCNVMask(number_of_exons, p_amplify=0.5, p_delete=0.01):
         choice = random.randrange(0, number_of_exons)
         while cnv_mask[choice] != 0:
             choice = random.randrange(0, number_of_exons)
-        cnv_mask[choice] = -1*random.randrange(3,6)  # random deletions in the range [3, 5]
+        cnv_mask[choice] = -1*random.randrange(3,11)  # random deletions in the range [3, 10]
         number_of_deletions -= 1
     random.shuffle(cnv_mask)
 
@@ -103,39 +102,44 @@ def simulateCNV(genome, cnv_list):
     :return: modified genome and modified target list
     '''
     print "total number of targets: " + `len(cnv_list)`
-    ADJUST = 0          # a value used to adjust the start and end positions of all targets
-    cnv_genome = genome[:]
+    cnv_genome_list = []
     cnv_targets = []
+    fragment_start = 0      # a value used to determine the start of the unchanged fragments
+    ADJUST = 0              # a value used to adjust the start and end positions of all targets
     for i, cnv in enumerate(cnv_list):
-        start, end = ADJUST + cnv[1], ADJUST + cnv[2]
-        number_of_copies = cnv[3]
-        exon_string = cnv_genome[start:end]
+        start, end, number_of_copies = cnv[1], cnv[2], cnv[3]
+        exon_string = genome[start:end]
 
-        if number_of_copies < 0:
-            # modify the genome
-            list_to_join = [cnv_genome[:start], cnv_genome[end:]]
-            cnv_genome = ''.join(list_to_join)
+        # add unchanged fragment
+        cnv_genome_list.append(genome[fragment_start: start])
 
+        if number_of_copies < 0:    # deletion
+            # don't add any exons
             # modify the global ADJUST value so that the next iteration we capture the correct exon
             ADJUST -= len(exon_string)
 
         elif number_of_copies >= 0:        # amplifications
             # modify the genome
-            for _ in range(number_of_copies):
-                list_to_join = [cnv_genome[:end], exon_string , cnv_genome[end:]]
-                cnv_genome =  ''.join(list_to_join)
+            amplification = exon_string * (number_of_copies + 1)        # to account for the original copy (if number_of_copies = 0)
+            cnv_genome_list.append(amplification)
 
             # modify the target list
-            new_exon_start = start
-            new_exon_end = end + (len(exon_string) * number_of_copies)
+            new_exon_start = ADJUST + start
+            new_exon_end = ADJUST + end + (len(exon_string) * number_of_copies)
+
             exon = (cnv[0], new_exon_start, new_exon_end, number_of_copies)
             cnv_targets.append(exon)
 
             # modify the global ADJUST value so that the next iteration we capture the correct exon
             ADJUST += len(exon_string) * number_of_copies
-        if  i % 100 == 0:
-            print "simulated copy number variations: " + `i` + "/" + `len(cnv_list)` + " from the target list"
 
+        fragment_start = end  # the next fragment start will be from the end of that cut
+
+        percentage = i / float(len(cnv_list)) * 100.0
+        if  int(i) % 5 == 0:
+            print "simulated copy number variations: " + `percentage` + "% .."
+    print "merging results .."
+    cnv_genome = ''.join(cnv_genome_list)
     return cnv_genome, cnv_targets
 
 def simulateControl(genome, cnv_list):
@@ -192,6 +196,8 @@ def controlListToCNVList(original_cnv_list, control_cnv_list):
 
     return new_list
 
+
+
 # Required Input
 genome_file = sys.argv[1]
 target_file = sys.argv[2]
@@ -247,3 +253,6 @@ with open(cnv_target_file, 'w') as tw:
         line = target[0] + "\t" + `target[1]` + "\t" + `target[2]` + "\n"
         tw.write(line)
 print "Control files saved to " + os.path.dirname(os.path.realpath(__file__)) + '/../output/cnvsim_output/'
+
+print len(control_genome), len(control_cnv_list)
+print len(cnv_genome), len(cnv_target_list)
