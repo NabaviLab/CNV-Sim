@@ -4,35 +4,35 @@ input
 !input/README.md
 
 # ignore cnv_simulator
-1.\ cnv_simulator
+1_cnv_simulator/
 # except
-!1.\ cnv_simulator/README.md
-!1.\ cnv_simulator/cnv-sim.py
-!1.\ cnv_simulator/setup-cnvsim.sh
+!1_cnv_simulator/README.md
+!1_cnv_simulator/cnv-sim.py
+!1_cnv_simulator/setup-cnvsim.sh
 
 # ignore wessim
-2.\ wessim
+2_wessim
 # except
-!2.\ wessim/README.md
-!2.\ wessim/setup-wessim.sh
+!2_wessim/README.md
+!2_wessim/setup-wessim.sh
 
 # ignore bwa_aligner
-3.\ bwa_aligner
+3_bwa_aligner
 # except
-!3.\ bwa_aligner/setup-bwa.sh
-!3.\ bwa_aligner/README.md
+!3_bwa_aligner/setup-bwa.sh
+!3_bwa_aligner/README.md
 
 # ignore samtools
-4.\ samtools
+4_samtools
 # except
-!4.\ samtools/README.md
-!4.\ samtools/setup-samtools.sh
+!4_samtools/README.md
+!4_samtools/setup-samtools.sh
 
 # ignore igv_browser
-5.\ igv_browser
+5_igv_browser
 # except
-!5.\ igv_browser/README.md
-!5.\ igv_browser/setup-igv.sh
+!5_igv_browser/README.md
+!5_igv_browser/setup-igv.sh
 
 # ignore output folder
 output
