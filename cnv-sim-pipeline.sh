@@ -25,3 +25,16 @@ GENOME=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-CNVGenome.fa'
 TARGET=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-CNVTarget.bed'
 NUMBER_OF_READS=400000
 sh wessim-align-sort-vis.sh $ORIGINAL_GENOME_FILE $GENOME $TARGET $EXPERIMENT_NAME'.cnv' $NUMBER_OF_READS
+
+# Step 5 (IGV)
+CNV_FILE=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-CNVList.bed'
+SAMPLE_AMPLIFICATION_FILE=$CNV_HOME'/output/igv_output/'$EXPERIMENT_NAME'-CNVList.amplifications.bed'
+SAMPLE_DELETION_FILE=$CNV_HOME'/output/igv_output/'$EXPERIMENT_NAME'-CNVList.deletions.bed'
+awk '($4 == 10)' CNV_FILE | head -20 > SAMPLE_AMPLIFICATION_FILE
+awk '($4 == -1)' CNV_FILE | tail -20 > SAMPLE_DELETION_FILE
+
+OUTPUT_PATH=$CNV_HOME'/output/igv_output/'$EXPERIMENT_NAME'-amplifications-visualizations/'
+bedtools igv -path $OUTPUT_PATH -i $SAMPLE_AMPLIFICATION_FILE > $SAMPLE_AMPLIFICATION_FILE'.sh'
+
+OUTPUT_PATH=$CNV_HOME'/output/igv_output/'$EXPERIMENT_NAME'-deletions-visualizations/'
+bedtools igv -path $OUTPUT_PATH -i $SAMPLE_DELETION_FILE > $SAMPLE_DELETION_FILE'.sh'
