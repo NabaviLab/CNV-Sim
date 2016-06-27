@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CNV_HOME=$(pwd)
-EXPERIMENT_NAME='dev_tes'
+EXPERIMENT_NAME='dev_regions2'
 
 ORIGINAL_GENOME_FILE=$CNV_HOME'/input/test/chr1.fa'
 ORIGINAL_TARGET_FILE=$CNV_HOME'/input/test/chr1-target.bed'
@@ -40,18 +40,22 @@ sh wessim-align-sort.sh $ORIGINAL_GENOME_FILE $GENOME $TARGET $EXPERIMENT_NAME'.
 NOW=$(date +"%Y-%m-%d %H:%M:%S")
 echo "[CNV SIM $NOW] generating IGV visualization scripts .."
 CNV_FILE=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-CNVList.bed'
-SAMPLE_AMPLIFICATION_FILE=$CNV_HOME'/output/igv_output/'$EXPERIMENT_NAME'-CNVList.amplifications.bed'
-SAMPLE_DELETION_FILE=$CNV_HOME'/output/igv_output/'$EXPERIMENT_NAME'-CNVList.deletions.bed'
+mkdir $CNV_HOME'/output/igv_output/'$EXPERIMENT_NAME
+SAMPLE_AMPLIFICATION_FILE=$CNV_HOME'/output/igv_output/'$EXPERIMENT_NAME'/'$EXPERIMENT_NAME'-CNVList.amplifications.bed'
+SAMPLE_DELETION_FILE=$CNV_HOME'/output/igv_output/'$EXPERIMENT_NAME'/'$EXPERIMENT_NAME'-CNVList.deletions.bed'
 awk '($4 > 0 && ($3 - $2) > 1000)' $CNV_FILE | head -20 > $SAMPLE_AMPLIFICATION_FILE
 awk '($4 < 0 && ($3 - $2) > 1000)' $CNV_FILE | tail -20 > $SAMPLE_DELETION_FILE
 
-OUTPUT_PATH=$CNV_HOME'/output/igv_output/'$EXPERIMENT_NAME'-amplifications-visualizations/'
+OUTPUT_PATH=$CNV_HOME'/output/igv_output/'$EXPERIMENT_NAME'/'$EXPERIMENT_NAME'-amplifications-visualizations/'
 mkdir $OUTPUT_PATH
 bedtools igv -path $OUTPUT_PATH -i $SAMPLE_AMPLIFICATION_FILE > $SAMPLE_AMPLIFICATION_FILE'.sh'
 
 OUTPUT_PATH=$CNV_HOME'/output/igv_output/'$EXPERIMENT_NAME'-deletions-visualizations/'
 mkdir $OUTPUT_PATH
 bedtools igv -path $OUTPUT_PATH -i $SAMPLE_DELETION_FILE > $SAMPLE_DELETION_FILE'.sh'
+
+rm $SAMPLE_AMPLIFICATION_FILE
+rm $SAMPLE_DELETION_FILE
 echo ''
 NOW=$(date +"%Y-%m-%d %H:%M:%S")
 echo "[CNV SIM $NOW] visualization scripts saved .."
