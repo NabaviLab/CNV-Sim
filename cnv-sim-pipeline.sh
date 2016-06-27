@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CNV_HOME=$(pwd)
-EXPERIMENT_NAME='my_test_optimized5'
+EXPERIMENT_NAME='dev_tes'
 
 ORIGINAL_GENOME_FILE=$CNV_HOME'/input/test/chr1.fa'
 ORIGINAL_TARGET_FILE=$CNV_HOME'/input/test/chr1-target.bed'
