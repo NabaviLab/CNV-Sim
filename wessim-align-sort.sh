@@ -3,7 +3,8 @@
 ORIGINAL_GENOME=$1      # used for alignment
 GENOME_FILE=$2          # used as a reference for reads by wessim
 TARGET_FILE=$3          # used as a target for reads by wessim
-EXPERIMENT_NAME=$4      # used to name output files
+NUMBER_OF_READS=$4      # used as the number of reads for WESSIM
+EXPERIMENT_NAME=$5      # used to name output files
 
 CNV_HOME=$(pwd)
 MODEL_FILE=$CNV_HOME'/input/models/ill100v4_p.gzip'
@@ -11,9 +12,9 @@ MODEL_FILE=$CNV_HOME'/input/models/ill100v4_p.gzip'
 # Step 2 (WESSIM)
 READ_LENGTH=100
 NUMBER_OF_THREADS=8
-NUMBER_OF_TARGETS=$(wc -l $TARGET_FILE | awk '{print($1)}')
-NUMBER_OF_READS=$(($NUMBER_OF_TARGETS*50))
 OUTPUT_FILE=$CNV_HOME'/output/wessim_output/'$EXPERIMENT_NAME
+NUMBER_OF_TARGETS=$(wc -l $TARGET_FILE | awk '{print($1)}')
+NUMBER_OF_READS=$(($NUMBER_OF_TARGETS*30))
 
 cd $CNV_HOME
 cd 2_wessim/Wessim/

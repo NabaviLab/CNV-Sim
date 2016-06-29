@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CNV_HOME=$(pwd)
-EXPERIMENT_NAME='dev_regions2'
+EXPERIMENT_NAME='dev_test2'
 
 ORIGINAL_GENOME_FILE=$CNV_HOME'/input/test/chr1.fa'
 ORIGINAL_TARGET_FILE=$CNV_HOME'/input/test/chr1-target.bed'
@@ -30,11 +30,11 @@ echo ''
 cd $CNV_HOME
 GENOME=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-ControlGenome.fa'
 TARGET=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-ControlTarget.bed'
-sh wessim-align-sort.sh $ORIGINAL_GENOME_FILE $GENOME $TARGET $EXPERIMENT_NAME'.normal'
+sh wessim-align-sort.sh $ORIGINAL_GENOME_FILE $GENOME $TARGET 2000000 $EXPERIMENT_NAME'.normal'
 
 GENOME=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-CNVGenome.fa'
 TARGET=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-CNVTarget.bed'
-sh wessim-align-sort.sh $ORIGINAL_GENOME_FILE $GENOME $TARGET $EXPERIMENT_NAME'.cnv'
+sh wessim-align-sort.sh $ORIGINAL_GENOME_FILE $GENOME $TARGET 4000000 $EXPERIMENT_NAME'.cnv'
 
 # Step 5 (IGV)
 NOW=$(date +"%Y-%m-%d %H:%M:%S")
