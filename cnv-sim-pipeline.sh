@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CNV_HOME=$(pwd)
-EXPERIMENT_NAME='dev_test2'
+EXPERIMENT_NAME='dev_test'
 
 ORIGINAL_GENOME_FILE=$CNV_HOME'/input/test/chr1.fa'
 ORIGINAL_TARGET_FILE=$CNV_HOME'/input/test/chr1-target.bed'
@@ -30,11 +30,11 @@ echo ''
 cd $CNV_HOME
 GENOME=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-ControlGenome.fa'
 TARGET=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-ControlTarget.bed'
-sh wessim-align-sort.sh $ORIGINAL_GENOME_FILE $GENOME $TARGET 2000000 $EXPERIMENT_NAME'.normal'
+sh wessim-align-sort.sh $ORIGINAL_GENOME_FILE $GENOME $TARGET $EXPERIMENT_NAME'.normal'
 
 GENOME=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-CNVGenome.fa'
 TARGET=$CNV_HOME'/output/cnvsim_output/'$EXPERIMENT_NAME'-CNVTarget.bed'
-sh wessim-align-sort.sh $ORIGINAL_GENOME_FILE $GENOME $TARGET 4000000 $EXPERIMENT_NAME'.cnv'
+sh wessim-align-sort.sh $ORIGINAL_GENOME_FILE $GENOME $TARGET $EXPERIMENT_NAME'.cnv'
 
 # Step 5 (IGV)
 NOW=$(date +"%Y-%m-%d %H:%M:%S")
@@ -50,7 +50,7 @@ OUTPUT_PATH=$CNV_HOME'/output/igv_output/'$EXPERIMENT_NAME'/'$EXPERIMENT_NAME'-a
 mkdir $OUTPUT_PATH
 bedtools igv -path $OUTPUT_PATH -i $SAMPLE_AMPLIFICATION_FILE > $SAMPLE_AMPLIFICATION_FILE'.sh'
 
-OUTPUT_PATH=$CNV_HOME'/output/igv_output/'$EXPERIMENT_NAME'-deletions-visualizations/'
+OUTPUT_PATH=$CNV_HOME'/output/igv_output/'$EXPERIMENT_NAME'/'$EXPERIMENT_NAME'-deletions-visualizations/'
 mkdir $OUTPUT_PATH
 bedtools igv -path $OUTPUT_PATH -i $SAMPLE_DELETION_FILE > $SAMPLE_DELETION_FILE'.sh'
 

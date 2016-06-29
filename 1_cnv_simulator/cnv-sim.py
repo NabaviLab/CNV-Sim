@@ -40,7 +40,7 @@ def readTargets(filename):
     with open(filename, 'r') as tf:
         for line in tf:
             chromosome, start, end = line.strip().split('\t')
-            exon = [chromosome, int(start), int(end)]
+            exon = (chromosome, int(start), int(end))
             exons.append(exon)
     return exons
 
@@ -64,7 +64,7 @@ def getCNVMatrix(cnv_list, regions_cout=30):
         i += comine_size
         if i > len(cnv_list):
             i = len(cnv_list)
-        last_target = i - 1
+        last_target = i
         cnv_matrix.append(cnv_list[first_target:last_target])
 
     return cnv_matrix
@@ -128,37 +128,36 @@ def simulateCNV(genome, cnv_matrix, mask):
             control_targets.append(cnv_matrix[i][j])
             cnv_targets.append(cnv_matrix[i][j])
 
-    for i, cnv_region in enumerate(cnv_matrix):
+    for k, cnv_region in enumerate(cnv_matrix):
 
-        number_of_copies = mask[i]
-        region_start = cnv_region[0][1] - 100   # add 100 bp to the left of the first target to avoid alignment problems
-        region_end = cnv_region[-1][2] + 100    # add 100 bp to the right of the last target to avoid alignment problems
+        number_of_copies = mask[k]
+        region_start = cnv_region[0][1] - 100
+        region_end = cnv_region[-1][2] + 100
 
         region_string = genome[region_start:region_end]
 
-        # if amplification, it will enter this loop
-        for i in range(number_of_copies):
-            cnv_genome.append(region_string)
-
+        if number_of_copies > 0:
+            # if amplification, it will enter this loop
             for target in cnv_region:
-                chr = target[0]
-                start = target[1] + CNV_APPEND_INDEX
-                end = target[2] + CNV_APPEND_INDEX
-                cnv_targets.append([chr, start, end])
-
-            CNV_APPEND_INDEX += len(region_string)
-
-        number_of_copies *= -1
-        # if deletion, it will enter this loop
-        for i in range(number_of_copies):
-            control_genome.append(region_string)
+                for _ in range(number_of_copies):
+                    amplification = genome[target[1]-100:target[2]+100]
+                    cnv_genome.append(amplification)
+                    chromosome = target[0]
+                    start = CNV_APPEND_INDEX
+                    end = CNV_APPEND_INDEX + len(amplification)
+                    cnv_targets.append((chromosome, start, end))
+                    CNV_APPEND_INDEX += len(amplification)
+        elif number_of_copies < 0:
+            # if deletion, it will enter this loop
             for target in cnv_region:
-                chr = target[0]
-                start = target[1] + CONTROL_APPEND_INDEX
-                end = target[2] + CONTROL_APPEND_INDEX
-                cnv_targets.append([chr, start, end])
-
-            CONTROL_APPEND_INDEX += len(region_string)
+                for _ in range(abs(number_of_copies)):
+                    deletion = genome[target[1]-100:target[2]+100]
+                    control_genome.append(deletion)
+                    chromosome = target[0]
+                    start = CONTROL_APPEND_INDEX
+                    end = CONTROL_APPEND_INDEX + len(deletion)
+                    control_targets.append((chromosome, start, end))
+                    CONTROL_APPEND_INDEX += len(deletion)
 
     log("merging results ..")
 
@@ -176,7 +175,7 @@ def main():
     #                   help="path to a CNV list file in BED format chr | start | end | variation. If not passed, it is randomly generated using --amplifications and --deletions parameters")
     parser.add_argument("-a", "--amplifications", type=float, default=0.50, \
                         help="percentage of amplifications in range [0.0: 1.0].")
-    parser.add_argument("-d", "--deletions", type=float, default=0.20, \
+    parser.add_argument("-d", "--deletions", type=float, default=0.0, \
                         help="percentage of deletions in range [0.0: 1.0].")
     parser.add_argument("-min", "--minimum", type=float, default=10, \
                         help="minimum number of amplifications/deletions introduced")
@@ -223,9 +222,12 @@ def main():
     control_genome, control_targets, cnv_genome, cnv_targets = simulateCNV(genome, cnv_matrix, mask)
 
     log("saving to the control genome file ..")
-    with open(control_genome_file, 'w') as f:
-        f.write(header + "\n")
-        f.write(control_genome)
+    with open(control_genome_file, 'w') as fw:
+        fw.write(header + "\n")
+        n = 50
+        l = [control_genome[i:i + n] for i in range(0, len(control_genome), n)]
+        for line in l:
+            fw.write(line + "\n")
 
     log("saving to the control target file ..")
     with open(control_target_file, 'w') as tw:
@@ -237,7 +239,10 @@ def main():
     log("saving to the cnv genome file ..")
     with open(cnv_genome_file, 'w') as fw:
         fw.write(header + "\n")
-        fw.write(cnv_genome)
+        n = 50
+        l = [cnv_genome[i:i + n] for i in range(0, len(cnv_genome), n)]
+        for line in l:
+            fw.write(line + "\n")
 
     log("saving to the cnv target file ..")
     with open(cnv_target_file, 'w') as tw:
@@ -246,14 +251,8 @@ def main():
             tw.write(line)
     log("CNV files saved to " + args.output_dir)
 
-def test(my_list):
-    v = 10
-    for item in my_list:
-        def mf(x):
-            print x
-            x += v
-        map(mf, my_list)
-    print my_list
 
 if __name__ == '__main__':
     main()
+
+
