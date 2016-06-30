@@ -163,6 +163,17 @@ def simulateCNV(genome, cnv_matrix, mask):
 
     return ''.join(control_genome), control_targets, ''.join(cnv_genome), cnv_targets
 
+def targetsLengths(target_list):
+    '''
+    A function to calcuate the number of base pairs in the target list. This value is to be used to estimate the appropriate number of reads to be passed to WESSIM
+    :param target_list: A target list of the form [(chr, start, end), ...]
+    :return: integet, # of bp in all targets
+    '''
+    count = 0
+    for target in target_list:
+        count += target[2] - target[1]
+    return count
+
 def main():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("genome", \
@@ -175,7 +186,7 @@ def main():
     #                   help="path to a CNV list file in BED format chr | start | end | variation. If not passed, it is randomly generated using --amplifications and --deletions parameters")
     parser.add_argument("-a", "--amplifications", type=float, default=0.50, \
                         help="percentage of amplifications in range [0.0: 1.0].")
-    parser.add_argument("-d", "--deletions", type=float, default=0.0, \
+    parser.add_argument("-d", "--deletions", type=float, default=0.20, \
                         help="percentage of deletions in range [0.0: 1.0].")
     parser.add_argument("-min", "--minimum", type=float, default=10, \
                         help="minimum number of amplifications/deletions introduced")
@@ -195,6 +206,7 @@ def main():
     control_target_file = args.output_dir + simulation_name + '-ControlTarget.bed'
     cnv_genome_file = args.output_dir + simulation_name + '-CNVGenome.fa'
     cnv_target_file = args.output_dir + simulation_name + '-CNVTarget.bed'
+    target_lengths_file = args.output_dir + simulation_name + '-lengths.tmp'
 
     log("loading genome file ..")
     header, genome = readGenome(genome_file)
@@ -220,6 +232,11 @@ def main():
 
     log("simulating copy number variations using the generated control files")
     control_genome, control_targets, cnv_genome, cnv_targets = simulateCNV(genome, cnv_matrix, mask)
+    control_targets_length = targetsLengths(control_targets)
+    cnv_targes_length = targetsLengths(cnv_targets)
+    with open(target_lengths_file, 'w') as f:
+        f.write(`control_targets_length` + "\n")
+        f.write(`cnv_targes_length` + "\n")
 
     log("saving to the control genome file ..")
     with open(control_genome_file, 'w') as fw:
