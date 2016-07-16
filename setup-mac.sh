@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-mkdir tmp
-cd tmp
-
-# INSTALL GENERAL DEPENDENCIES (Mac OS)
-
 # Homebrew
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
@@ -26,7 +21,11 @@ brew install git
 # clean after installation
 rm -t tmp
 
-# java
-brew tap caskroom/cask
-brew install brew-cask
-brew cask install java
+# Install pysam library
+pip install pysam
+
+# Install numpy library
+pip install numpy
+
+# install bedtools
+brew install homebrew/science/bedtools
