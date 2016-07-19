@@ -29,8 +29,9 @@ The exome consists of introns and exons. The target file here should indicate th
  
 ## CNV-Sim options
 ```
-usage: cnv-sim.py [-h] [-m NAME] [-n N_READS] [-a AMPLIFICATIONS]
-                  [-d DELETIONS] [-min MINIMUM] [-max MAXIMUM]
+usage: cnv-sim.py [-h] [-m NAME] [--cnv_list CNV_LIST] [-n N_READS]
+                  [-g REGIONS_COUNT] [-a AMPLIFICATIONS] [-d DELETIONS]
+                  [-min MINIMUM] [-max MAXIMUM]
                   genome target
 
 positional arguments:
@@ -41,9 +42,20 @@ optional arguments:
   -h, --help            show this help message and exit
   -m NAME, --name NAME  a name to be used for simulated results. (default:
                         test)
+  --cnv_list CNV_LIST   path to a CNV list file in BED format chr | start |
+                        end | variation. If not passed, it is randomly
+                        generated using --amplifications and --deletions
+                        parameters (default: None)
   -n N_READS, --n_reads N_READS
                         total number of reads without variations (default:
                         10000)
+
+simulation parameters:
+  parameters to be used if CNV list is not passed
+
+  -g REGIONS_COUNT, --regions_count REGIONS_COUNT
+                        number of CNV regions to be randomly generated
+                        (default: 30)
   -a AMPLIFICATIONS, --amplifications AMPLIFICATIONS
                         percentage of amplifications in range [0.0: 1.0].
                         (default: 0.5)
