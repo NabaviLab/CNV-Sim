@@ -6,15 +6,15 @@ import random
 import subprocess
 import os
 
-def generateCNVMatrix(targets_list, regions_cout=30):
+def generateCNVMatrix(targets_list, regions_count):
     '''
     A function to randomly divide sequential exonic targets into whole CNV regions
     :param targets_list: a list of target exons loaded from the file provided by the user
     :return: A matrix where rows represent the region index and the first column as a list of targets in this region
     '''
-    regions_cout -= 1
+    regions_count -= 1
     number_of_targets = len(targets_list)
-    comine_size = number_of_targets / regions_cout
+    comine_size = number_of_targets / regions_count
     cnv_matrix = []
 
     i = 0

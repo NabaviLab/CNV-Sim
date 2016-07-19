@@ -26,22 +26,28 @@ def main():
                        help="path to a CNV list file in BED format chr | start | end | variation. If not passed, it is randomly generated using --amplifications and --deletions parameters")
     parser.add_argument("-n", "--n_reads", type=int, default=10000, \
                         help="total number of reads without variations")
-    parser.add_argument("-a", "--amplifications", type=float, default=0.50, \
+
+    cnv_sim_group = parser.add_argument_group('simulation parameters', "parameters to be used if CNV list is not passed")
+    cnv_sim_group.add_argument("-g", "--regions_count", type=int, default=30, \
+                        help="number of CNV regions to be randomly generated")
+    cnv_sim_group.add_argument("-a", "--amplifications", type=float, default=0.50, \
                         help="percentage of amplifications in range [0.0: 1.0].")
-    parser.add_argument("-d", "--deletions", type=float, default=0.20, \
+    cnv_sim_group.add_argument("-d", "--deletions", type=float, default=0.20, \
                         help="percentage of deletions in range [0.0: 1.0].")
-    parser.add_argument("-min", "--minimum", type=float, default=10, \
+    cnv_sim_group.add_argument("-min", "--minimum", type=float, default=10, \
                         help="minimum number of amplifications/deletions introduced")
-    parser.add_argument("-max", "--maximum", type=float, default=15, \
+    cnv_sim_group.add_argument("-max", "--maximum", type=float, default=15, \
                         help="maximum number of amplifications/deletions introduced")
 
     args = parser.parse_args()
 
     genome_file = args.genome.name
     target_file = args.target.name
-    cnv_list_file = args.cnv_list
     simulation_name = args.name
+
+    cnv_list_file = args.cnv_list
     number_of_reads = args.n_reads
+    regions_count = args.regions_count
 
     output_dir = os.path.join(os.getcwd(), simulation_name)
     tmp_dir = os.path.join(os.getcwd(), "tmp")
@@ -84,7 +90,7 @@ def main():
         cnv_list_file = os.path.join(output_dir, "CNVList.bed")
 
         log("generating CNV list ..")
-        cnv_matrix = exome_simulator.generateCNVMatrix(targets)
+        cnv_matrix = exome_simulator.generateCNVMatrix(targets, regions_count)
         mask = exome_simulator.generateCNVMask(len(cnv_matrix), args.amplifications, args.deletions, args.minimum, args.maximum)
 
         with open(cnv_list_file, 'w') as f:
