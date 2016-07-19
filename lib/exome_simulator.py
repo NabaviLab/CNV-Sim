@@ -6,28 +6,53 @@ import random
 import subprocess
 import os
 
-def getCNVMatrix(cnv_list, regions_cout=30):
+def generateCNVMatrix(targets_list, regions_cout=30):
     '''
     A function to randomly divide sequential exonic targets into whole CNV regions
-    :param cnv_list: a target list of exons with Copy Number Variation as the fourth column
+    :param targets_list: a list of target exons loaded from the file provided by the user
     :return: A matrix where rows represent the region index and the first column as a list of targets in this region
     '''
     regions_cout -= 1
-    number_of_targets = len(cnv_list)
+    number_of_targets = len(targets_list)
     comine_size = number_of_targets / regions_cout
     cnv_matrix = []
 
     i = 0
     while True:
-        if i == len(cnv_list):
+        if i == len(targets_list):
             break
 
         first_target = i
         i += comine_size
-        if i > len(cnv_list):
-            i = len(cnv_list)
+        if i > len(targets_list):
+            i = len(targets_list)
         last_target = i
-        cnv_matrix.append(cnv_list[first_target:last_target])
+        cnv_matrix.append(targets_list[first_target:last_target])
+
+    return cnv_matrix
+
+def loadCNVMatrix(targets_list, cnv_regions):
+    '''
+    A function to map targets to their corresponding CNV regions
+    :param targets_list: a list of target exons loaded from the file provided by the user
+    :param cnv_regions: a list of CNV regions loaded from the CNV file provided by the user
+    :return: A matrix where rows represent the region index and the first column as a list of targets in this region
+    '''
+    cnv_matrix = []
+    for cnv in cnv_regions:
+        region_chromosome = cnv[0]
+        region_start = cnv[1]
+        region_end = cnv[2]
+
+        region_targets = []
+        for target in targets_list:
+            target_chromosome = target[0]
+            target_start = target[1]
+            target_end = target[2]
+            if target_chromosome == region_chromosome and target_start >= region_start and target_end <= region_end:
+                region_targets.append(target)
+
+        cnv_matrix.append(region_targets)
 
     return cnv_matrix
 

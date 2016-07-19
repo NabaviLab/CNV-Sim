@@ -22,8 +22,8 @@ def main():
 
     parser.add_argument("-m", "--name",type=str, default="test", \
                         help="a name to be used for simulated results.")
-    # parser.add_argument("--cnv-list", type=str, \
-    #                   help="path to a CNV list file in BED format chr | start | end | variation. If not passed, it is randomly generated using --amplifications and --deletions parameters")
+    parser.add_argument("--cnv_list", type=file, default=None, \
+                       help="path to a CNV list file in BED format chr | start | end | variation. If not passed, it is randomly generated using --amplifications and --deletions parameters")
     parser.add_argument("-n", "--n_reads", type=int, default=10000, \
                         help="total number of reads without variations")
     parser.add_argument("-a", "--amplifications", type=float, default=0.50, \
@@ -39,6 +39,7 @@ def main():
 
     genome_file = args.genome.name
     target_file = args.target.name
+    cnv_list_file = args.cnv_list
     simulation_name = args.name
     number_of_reads = args.n_reads
 
@@ -59,9 +60,6 @@ def main():
     genome_file = os.path.join(tmp_dir, "reference.fa")
     target_file = os.path.join(tmp_dir, "target.bed")
 
-    # CNV list file
-    cnv_list_file = os.path.join(output_dir, "CNVList.bed")
-
     # initialize variables for temporary files
     control_genome_file = os.path.join(tmp_dir, "ControlGenome.fa")
     control_target_file = os.path.join(tmp_dir, "ControlTarget.bed")
@@ -75,25 +73,40 @@ def main():
     header, genome = fileio.readGenome(genome_file)
     log("successfully loaded a genome of length " + `len(genome)`)
 
+    log("loading target file ..")
     log("sorting and merging targets ..")
     target_file = fileio.prepareTargetFile(target_file)
-
-    log("loading target file ..")
     targets = fileio.readTargets(target_file)
+    log("successfully loaded " + `len(targets)` + " targets ..")
 
-    log("generating CNV list ..")
+    if cnv_list_file is None:
+        # CNV list file
+        cnv_list_file = os.path.join(output_dir, "CNVList.bed")
 
-    cnv_matrix = exome_simulator.getCNVMatrix(targets)
-    mask = exome_simulator.generateCNVMask(len(cnv_matrix), args.amplifications, args.deletions, args.minimum, args.maximum)
+        log("generating CNV list ..")
+        cnv_matrix = exome_simulator.generateCNVMatrix(targets)
+        mask = exome_simulator.generateCNVMask(len(cnv_matrix), args.amplifications, args.deletions, args.minimum, args.maximum)
 
-    with open(cnv_list_file, 'w') as f:
-        for i, cnv_region in enumerate(cnv_matrix):
-            line = cnv_region[0][0] + '\t' \
-                   + `cnv_region[0][1]` + '\t' \
-                   + `cnv_region[-1][2]` + '\t' \
-                   + `mask[i]` + '\n'
-            f.write(line)
-    log("CNV list saved to " + cnv_list_file)
+        with open(cnv_list_file, 'w') as f:
+            for i, cnv_region in enumerate(cnv_matrix):
+                line = cnv_region[0][0] + '\t' \
+                       + `cnv_region[0][1]` + '\t' \
+                       + `cnv_region[-1][2]` + '\t' \
+                       + `mask[i]` + '\n'
+                f.write(line)
+        log("randomly generated CNV list saved to " + cnv_list_file)
+    else:
+        log("loading CNV list ..")
+        with open(cnv_list_file.name, "r") as f:
+            cnv_list = []
+            lines = f.readlines()
+            for line in lines:
+                chromosome, region_start, region_end, variation = line.strip().split("\t")
+                cnv_list.append((chromosome, int(region_start), int(region_end), int(variation)))
+
+            cnv_matrix = exome_simulator.loadCNVMatrix(targets, cnv_list)
+            mask = map(lambda x: x[3], cnv_list)
+        log("successfully loaded CNV list that contains " + `len(lines)` + " regions ..")
 
     # call Wessim to generate reads from the genome file and the target list
     log("generating reads for the target exons ..")
