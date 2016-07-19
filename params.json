@@ -1,0 +1,6 @@
+{
+  "name": "CNV-Sim",
+  "tagline": "Copy Number Variations (CNV) Simulator",
+  "body": "### Copy Number Variation (CNV) Simulator\r\nIn genomics, Copy Number Variations (CNVs) is a type of structureal variation in a genome where sections of the genome are repeated. The number if repetitions (duplications) varies between individuals in the human population.\r\n\r\nThe Copy Number Variation Simulator (CNV Sim) is a tool used to generate a set of artificial DNA fragments for Next Generation Sequencing (NGS) read simulation.\r\nWhen aligned back to the reference genome, the artificial generated reads show variations in the whole exome regions. Variations can be either amplifications of deletions.\r\nCNV-Sim wraps the functionality of [Wessim](https://github.com/sak042/Wessim) to introduce variations in the targets.\r\n\r\n### Authors and Contributors\r\nAbdelrahman Hosny (@abdelrahmanhosny) and Sheida Nabavi (@sheidaN)\r\n\r\n### Support or Contact\r\nHaving trouble with running CNV-Sim? [contact us](mailto:abdelrahman.hosny@ieee.org) and we’ll help you sort it out.\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
