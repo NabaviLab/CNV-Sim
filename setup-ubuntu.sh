@@ -18,5 +18,8 @@ sudo pip install pysam
 # Install numpy library
 sudo pip install numpy
 
+# Install Bio Python
+pip install biopython
+
 # install bedtools
 sudo apt-get install bedtools

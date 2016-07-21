@@ -4,6 +4,7 @@ __author__ = 'Abdelrahman Hosny'
 
 import subprocess
 import os
+from Bio import SeqIO
 
 def readGenome(filename):
     '''
@@ -21,6 +22,16 @@ def readGenome(filename):
             else:
                 header = line.strip()
     return header, genome
+
+def readGenomeMultipleChromosomes(filename):
+    '''
+    Reads a FASTA file that contains multiple chromosomes
+    :param filename: the full path of the FASTA file
+    :return: a dictionary {chromosome: sequence}, whole genome length
+    '''
+    genome = SeqIO.to_dict(SeqIO.parse(open(filename), 'fasta'))
+    genome_length = sum(map(lambda x: len(x), genome.values()))
+    return genome, genome_length
 
 def readTargets(filename):
     '''
@@ -53,7 +64,7 @@ def prepareTargetFile(target_file):
 
     return merged_file
 
-def mergeReads(tmp_dir, output_dir):
+def mergeWessimReads(tmp_dir, output_dir):
     '''
     merges the base reads with normal and cnv
     :return: null
@@ -73,6 +84,20 @@ def mergeReads(tmp_dir, output_dir):
         subprocess.call(["cat", base_file_1, cnv_file_1], stdout=f)
     with open(os.path.join(output_dir, "cnv_2.fastq.gz"), "w") as f:
         subprocess.call(["cat", base_file_2, cnv_file_2], stdout=f)
+
+def mergeARTReads(tmp_dir, output_dir):
+    '''
+    merges the base reads with normal and cnv
+    :return: null
+    '''
+    base_file = os.path.join(tmp_dir, "base.fq")
+    normal_file = os.path.join(tmp_dir, "control.fq")
+    cnv_file = os.path.join(tmp_dir, "cnv.fq")
+
+    with open(os.path.join(output_dir, "control.fq"), "w") as f:
+        subprocess.call(["cat", base_file, normal_file], stdout=f)
+    with open(os.path.join(output_dir, "cnv.fq"), "w") as f:
+        subprocess.call(["cat", base_file, cnv_file], stdout=f)
 
 def clean(tmp_dir):
     subprocess.call(["rm", "-rf", tmp_dir])

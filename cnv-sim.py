@@ -9,6 +9,7 @@ import shutil
 
 from lib import fileio
 from lib import exome_simulator
+from lib import genome_simulator
 
 def log(message):
     print '[CNV SIM {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()) + "] " + message
@@ -36,9 +37,9 @@ def main():
                         help="percentage of amplifications in range [0.0: 1.0].")
     cnv_sim_group.add_argument("-d", "--deletions", type=float, default=0.20, \
                         help="percentage of deletions in range [0.0: 1.0].")
-    cnv_sim_group.add_argument("-min", "--minimum", type=float, default=10, \
+    cnv_sim_group.add_argument("-min", "--minimum", type=float, default=3, \
                         help="minimum number of amplifications/deletions introduced")
-    cnv_sim_group.add_argument("-max", "--maximum", type=float, default=15, \
+    cnv_sim_group.add_argument("-max", "--maximum", type=float, default=10, \
                         help="maximum number of amplifications/deletions introduced")
 
     args = parser.parse_args()
@@ -71,8 +72,10 @@ def main():
         # initialize variables for temporary files
         control_genome_file = os.path.join(tmp_dir, "ControlGenome.fa")
         cnv_genome_file = os.path.join(tmp_dir, "CNVGenome.fa")
+        base_reads_file = os.path.join(tmp_dir, "base")
         control_reads_file = os.path.join(tmp_dir, "control")
         cnv_reads_file = os.path.join(tmp_dir, "cnv")
+
 
         log("loading genome file ..")
         header, genome = fileio.readGenome(genome_file)
@@ -83,19 +86,18 @@ def main():
             cnv_list_file = os.path.join(output_dir, "CNVList.bed")
 
             log("generating CNV list ..")
-            # cnv_matrix = exome_simulator.generateCNVMatrix(targets, regions_count)
-            # mask = exome_simulator.generateCNVMask(len(cnv_matrix), args.amplifications, args.deletions, args.minimum,
-            #                                       args.maximum)
-            '''
+            cnv_list = genome_simulator.generateCNVList(len(genome), regions_count, args.amplifications, args.deletions, args.minimum, args.maximum)
+            cnv_list = map(lambda l:[header.replace('>', '')] + l , cnv_list)
+
             with open(cnv_list_file, 'w') as f:
-                for i, cnv_region in enumerate(cnv_matrix):
-                    line = cnv_region[0][0] + '\t' \
-                           + `cnv_region[0][1]` + '\t' \
-                           + `cnv_region[-1][2]` + '\t' \
-                           + `mask[i]` + '\n'
+                for i, cnv_region in enumerate(cnv_list):
+                    line = cnv_region[0] + '\t' \
+                           + `cnv_region[1]` + '\t' \
+                           + `cnv_region[2]` + '\t' \
+                           + `cnv_region[3]` + '\n'
                     f.write(line)
             log("randomly generated CNV list saved to " + cnv_list_file)
-            '''
+
         else:
             log("loading CNV list ..")
             with open(cnv_list_file.name, "r") as f:
@@ -105,41 +107,42 @@ def main():
                     chromosome, region_start, region_end, variation = line.strip().split("\t")
                     cnv_list.append((chromosome, int(region_start), int(region_end), int(variation)))
 
-                # cnv_matrix = exome_simulator.loadCNVMatrix(targets, cnv_list)
-                # mask = map(lambda x: x[3], cnv_list)
             log("successfully loaded CNV list that contains " + `len(lines)` + " regions ..")
 
+        # call ART to generate reads from the genome file
+        log("generating reads for the genome ..")
+        log("delegating job to ART ...")
+        genome_simulator.callART(genome_file, base_reads_file)
+
         log("simulating copy number variations (amplifications/deletions)")
-        # control_genome, control_targets, cnv_genome, cnv_targets = exome_simulator.simulateCNV(genome, cnv_matrix, mask)
+        control_genome, cnv_genome = genome_simulator.simulateCNV(genome, cnv_list)
 
         log("saving to the control genome file ..")
-        '''
+
         with open(control_genome_file, 'w') as fw:
             fw.write(header + "\n")
             n = 50
             l = [control_genome[i:i + n] for i in range(0, len(control_genome), n)]
             for line in l:
                 fw.write(line + "\n")
-        '''
 
         log("delegating job to ART ...")
-        # exome_simulator.callWessim(control_genome_file, control_target_file, control_reads_file, int(args.deletions * number_of_reads))
+        genome_simulator.callART(control_genome_file, control_reads_file)
 
         log("saving to the CNV genome file ..")
-        '''
-        with open(control_genome_file, 'w') as fw:
+        with open(cnv_genome_file, 'w') as fw:
             fw.write(header + "\n")
             n = 50
-            l = [control_genome[i:i + n] for i in range(0, len(control_genome), n)]
+            l = [cnv_genome[i:i + n] for i in range(0, len(cnv_genome), n)]
             for line in l:
                 fw.write(line + "\n")
-        '''
+
 
         log("delegating job to ART ...")
-        # exome_simulator.callWessim(control_genome_file, control_target_file, control_reads_file, int(args.deletions * number_of_reads))
+        genome_simulator.callART(cnv_genome_file, cnv_reads_file)
 
         log("merging results ..")
-        fileio.mergeReads(tmp_dir, output_dir)
+        fileio.mergeARTReads(tmp_dir, output_dir)
 
         log("cleaning temporary files ..")
         fileio.clean(tmp_dir)
@@ -218,7 +221,6 @@ def main():
         log("simulating copy number variations (amplifications/deletions)")
         control_genome, control_targets, cnv_genome, cnv_targets = exome_simulator.simulateCNV(genome, cnv_matrix, mask)
 
-
         log("saving to the control genome file ..")
         with open(control_genome_file, 'w') as fw:
             fw.write(header + "\n")
@@ -254,7 +256,7 @@ def main():
         exome_simulator.callWessim(cnv_genome_file, cnv_target_file, cnv_reads_file, int(args.amplifications * number_of_reads))
 
         log("merging results ..")
-        fileio.mergeReads(tmp_dir,output_dir)
+        fileio.mergeWessimReads(tmp_dir,output_dir)
 
         log("cleaning temporary files ..")
         fileio.clean(tmp_dir)

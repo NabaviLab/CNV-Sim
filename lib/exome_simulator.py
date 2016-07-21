@@ -59,7 +59,7 @@ def loadCNVMatrix(targets_list, cnv_regions):
 def generateCNVMask(number_of_exons, p_amplify, p_delete, min_variation, max_variation):
     '''
     This function generates random Copy Number Variations mask list
-    :param exons: list of exons.
+    :param number_of_exons: the length of the target regions.
     :param p_amplify: percentage of amplifications introduced
     :param p_delete: percentage of deletions introduced
     :return: a list of the same length as the exons list. each list item
@@ -105,7 +105,7 @@ def simulateCNV(genome, cnv_matrix, mask):
     cnv_genome = []
     cnv_targets = []                    # initialize cnv target list
 
-    CONTROL_APPEND_INDEX = 0  # a value to re-base the (start, end) of amplified/deleted targets in a region
+    CONTROL_APPEND_INDEX = 0      # a value to re-base the (start, end) of amplified/deleted targets in a region
     CNV_APPEND_INDEX = 0          # a value to re-base the (start, end) of amplified/deleted targets in a region
 
     for k, cnv_region in enumerate(cnv_matrix):
@@ -113,7 +113,7 @@ def simulateCNV(genome, cnv_matrix, mask):
         number_of_copies = mask[k]
 
         if number_of_copies > 0:
-            # if amplification, it will enter this loop
+            # if amplification
             for target in cnv_region:
                 for _ in range(number_of_copies):
                     amplification = genome[target[1]-100:target[2]+100]
@@ -124,7 +124,7 @@ def simulateCNV(genome, cnv_matrix, mask):
                     cnv_targets.append((chromosome, start, end))
                     CNV_APPEND_INDEX += len(amplification)
         elif number_of_copies < 0:
-            # if deletion, it will enter this loop
+            # if deletion
             for target in cnv_region:
                 for _ in range(abs(number_of_copies)):
                     deletion = genome[target[1]-100:target[2]+100]

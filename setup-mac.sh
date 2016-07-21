@@ -27,5 +27,8 @@ pip install pysam
 # Install numpy library
 pip install numpy
 
+# Install Bio Python
+pip install biopython
+
 # install bedtools
 brew install homebrew/science/bedtools
