@@ -29,6 +29,7 @@ Coming soon!
 ## Required Input
 ### whole genome
 - Reference genome in [FASTA](https://en.wikipedia.org/wiki/FASTA_format) format.
+
 ### whole exome
 - Reference genome in [FASTA](https://en.wikipedia.org/wiki/FASTA_format) format.
 - Target exons file in [BED](https://genome.ucsc.edu/FAQ/FAQformat.html#format1) format. 
