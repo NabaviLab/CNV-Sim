@@ -3,8 +3,12 @@ In genomics, Copy Number Variations (CNVs) is a type of structureal variation in
 The number if repetitions (duplications) varies between individuals in the human population.
 
 The Copy Number Variation Simulator (CNV Sim) is a tool used to generate a set of artificial DNA fragments for Next Generation Sequencing (NGS) read simulation.
-When aligned back to the reference genome, the artificial generated reads show variations in the whole exome regions. Variations can be either amplifications of deletions.
-CNV-Sim wraps the functionality of [Wessim](https://github.com/sak042/Wessim) to introduce variations in the targets.  
+When aligned back to the reference genome, the artificial generated reads show variations in the CNV regions. Variations can be either amplifications of deletions.
+
+CNV-Sim offers two types of simulation:
+
+- CNV simulation in whole genome. CNV-Sim wraps the functionality of [ART](http://www.niehs.nih.gov/research/resources/software/biostatistics/art/) to introduce variations in the genome.
+- CNV simulation in whole exome. CNV-Sim wraps the functionality of [Wessim](https://github.com/sak042/Wessim) to introduce variations in the targets.  
 
 ## Use CNV-Sim
 ### CNV-Sim website
@@ -23,6 +27,9 @@ Coming soon!
 Coming soon!
 
 ## Required Input
+### whole genome
+- Reference genome in [FASTA](https://en.wikipedia.org/wiki/FASTA_format) format.
+### whole exome
 - Reference genome in [FASTA](https://en.wikipedia.org/wiki/FASTA_format) format.
 - Target exons file in [BED](https://genome.ucsc.edu/FAQ/FAQformat.html#format1) format. 
 The exome consists of introns and exons. The target file here should indicate the start and end positions of exons (not exomes).
@@ -32,11 +39,14 @@ The exome consists of introns and exons. The target file here should indicate th
 usage: cnv-sim.py [-h] [-m NAME] [--cnv_list CNV_LIST] [-n N_READS]
                   [-g REGIONS_COUNT] [-a AMPLIFICATIONS] [-d DELETIONS]
                   [-min MINIMUM] [-max MAXIMUM]
-                  genome target
+                  {genome,exome} genome [target]
 
 positional arguments:
+  {genome,exome}        simulate copy number variations in whole genome or
+                        exome regions
   genome                path to the referece genome file in FASTA format
-  target                path to the target regions file in BED format
+  target                path to the target regions file in BED format (if
+                        using exome) (default: None)
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -44,13 +54,13 @@ optional arguments:
                         test)
   --cnv_list CNV_LIST   path to a CNV list file in BED format chr | start |
                         end | variation. If not passed, it is randomly
-                        generated using --amplifications and --deletions
-                        parameters (default: None)
+                        generated using CNV list parameters below (default:
+                        None)
   -n N_READS, --n_reads N_READS
                         total number of reads without variations (default:
                         10000)
 
-simulation parameters:
+CNV list parameters:
   parameters to be used if CNV list is not passed
 
   -g REGIONS_COUNT, --regions_count REGIONS_COUNT
