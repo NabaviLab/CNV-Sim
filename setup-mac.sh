@@ -32,3 +32,13 @@ pip install biopython
 
 # install bedtools
 brew install homebrew/science/bedtools
+
+# install ART
+mkdir lib/ART
+wget -O lib/ART/art.tgz http://www.niehs.nih.gov/research/resources/assets/docs/artsrcgreatsmokymountains041716macostgz.tgz
+tar -xvzf lib/ART/art.tgz -C lib/ART
+rm lib/ART/art.tgz
+mv lib/ART/art_src_GreatSmokyMountains_MacOS/art_illumina lib/ART/art_illumina
+rm -rf lib/ART/art_src_GreatSmokyMountains_MacOS
+
+
