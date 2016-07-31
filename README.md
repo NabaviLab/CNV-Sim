@@ -30,7 +30,9 @@ We prefer that you run CNV-Sim from the [Docker](http://www.docker.com) containe
 *How to use CNV-Sim from Docker container:*
 
 
-docker run -v `<absolute_local_path_to_input_directory>`:/input nabavilab/cnv-sim ./cnv-sim.py -o /input/`<simulation_name>` [OPTIONS] {genome, exome} /input/`<genome_file>` [/input/`<target_file>`]
+```shell
+docker run -v <absolute_local_path_to_input_directory>:/input nabavilab/cnv-sim ./cnv-sim.py -o /input/<simulation_name> [OPTIONS] {genome, exome} /input/<genome_file> [/input/<target_file>]
+```
 
 where:
 
