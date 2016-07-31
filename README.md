@@ -17,6 +17,8 @@ Coming soon!
 ### Download as a standalone application
 Run the setup script appropriate for your operating system to install required dependencies.
 
+Refer to the below [CNV-Sim options](#cnv-sim-options-) section for more details on how to use all available command-line options
+
 ### Download as a Docker container
 We prefer that you run CNV-Sim from the [Docker](http://www.docker.com) container as it has all the dependencies installed inside yet; no need to go through any of the setup scripts included here.
 
@@ -37,7 +39,7 @@ where:
 - `<genome_file>` is the FASTA file name for the genome reference
 - `<target_file>` is the BED file name for the targets (only if using exome as the simulation type)
 
-Refer to the below [CNV-Sim options](#use-cnv-sim) section for more details on how to use all available command-line options
+Refer to the below [CNV-Sim options](#cnv-sim-options-) section for more details on how to use all available command-line options
 
 
 ### Use from Galaxy
@@ -55,7 +57,7 @@ Coming soon!
 - Target exons file in [BED](https://genome.ucsc.edu/FAQ/FAQformat.html#format1) format. 
 The exome consists of introns and exons. The target file here should indicate the start and end positions of exons (not exomes).
  
-## CNV-Sim options <a name="use-cnv-sim"></a>
+## CNV-Sim options
 ```
 usage: cnv-sim.py [-h] [-o OUTPUT_DIR] [--cnv_list CNV_LIST] [-n N_READS]
                   [-g REGIONS_COUNT] [-a AMPLIFICATIONS] [-d DELETIONS]
