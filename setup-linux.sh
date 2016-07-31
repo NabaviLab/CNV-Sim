@@ -9,9 +9,6 @@ sudo apt-get install python-pip
 # wget
 sudo apt-get install wget
 
-# git
-sudo apt-get install git
-
 # Install pysam library
 sudo pip install pysam
 
@@ -19,7 +16,7 @@ sudo pip install pysam
 sudo pip install numpy
 
 # Install Bio Python
-pip install biopython
+sudo pip install biopython
 
 # install bedtools
 sudo apt-get install bedtools

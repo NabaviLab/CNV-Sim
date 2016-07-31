@@ -23,8 +23,8 @@ def main():
     parser.add_argument("target", type=file, nargs='?', default=None, \
                         help="path to the target regions file in BED format (if using exome)")
 
-    parser.add_argument("-m", "--name",type=str, default="test", \
-                        help="a name to be used for simulated results.")
+    parser.add_argument("-o", "--output_dir",type=str, default="test", \
+                        help="a name to be used to create the output directory (overrides existing directory with the same name).")
     parser.add_argument("--cnv_list", type=file, default=None, \
                        help="path to a CNV list file in BED format chr | start | end | variation. If not passed, it is randomly generated using CNV list parameters below")
     parser.add_argument("-n", "--n_reads", type=int, default=10000, \
@@ -45,7 +45,7 @@ def main():
     args = parser.parse_args()
 
     genome_file = args.genome.name
-    simulation_name = args.name
+    simulation_name = args.output_dir
 
     cnv_list_file = args.cnv_list
     number_of_reads = args.n_reads

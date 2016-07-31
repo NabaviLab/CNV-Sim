@@ -1,5 +1,5 @@
 # Copy Number Variation Simulator (CNV-Sim)
-In genomics, Copy Number Variations (CNVs) is a type of structureal variation in a genome where sections of the genome are repeated. 
+In genomics, Copy Number Variations (CNVs) is a type of structural variation in a genome where sections of the genome are repeated. 
 The number if repetitions (duplications) varies between individuals in the human population.
 
 The Copy Number Variation Simulator (CNV Sim) is a tool used to generate a set of artificial DNA fragments for Next Generation Sequencing (NGS) read simulation.
@@ -18,7 +18,27 @@ Coming soon!
 Run the setup script appropriate for your operating system to install required dependencies.
 
 ### Download as a Docker container
-Coming soon!
+We prefer that you run CNV-Sim from the [Docker](http://www.docker.com) container as it has all the dependencies installed inside yet; no need to go through any of the setup scripts included here.
+
+*New to Docker?* Read this [blog post](https://www.toptal.com/devops/getting-started-with-docker-simplifying-devops) to understand how it works
+(yet you don't need to be a Docker expert to get CNV-Sim Docker container running!).
+
+*Install Docker:* [Linux](https://docs.docker.com/engine/installation/#/on-linux), [Mac OS](https://docs.docker.com/docker-for-mac/) and [Windows](https://docs.docker.com/docker-for-windows/)
+
+*How to use CNV-Sim from Docker container:*
+
+
+docker run -v `<absolute_local_path_to_input_directory>`:/input nabavilab/cnv-sim ./cnv-sim.py -o /input/`<simulation_name>` [OPTIONS] {genome, exome} /input/`<genome_file>` [/input/`<target_file>`]
+
+where:
+
+- `<absolute_local_path_to_input_directory>` is the directory where the required input files exist (genome.fa and target.bed if using exome simulation); *MUST* be absolute path 
+- `<simulation_name>` is used as the name of the output folder in your data directory, where the output of CNV Sim will be saved
+- `<genome_file>` is the FASTA file name for the genome reference
+- `<target_file>` is the BED file name for the targets (only if using exome as the simulation type)
+
+Refer to the below [CNV-Sim options](#use-cnv-sim) section for more details on how to use all available command-line options
+
 
 ### Use from Galaxy
 Coming soon!
@@ -35,9 +55,9 @@ Coming soon!
 - Target exons file in [BED](https://genome.ucsc.edu/FAQ/FAQformat.html#format1) format. 
 The exome consists of introns and exons. The target file here should indicate the start and end positions of exons (not exomes).
  
-## CNV-Sim options
+## CNV-Sim options <a name="use-cnv-sim"></a>
 ```
-usage: cnv-sim.py [-h] [-m NAME] [--cnv_list CNV_LIST] [-n N_READS]
+usage: cnv-sim.py [-h] [-o OUTPUT_DIR] [--cnv_list CNV_LIST] [-n N_READS]
                   [-g REGIONS_COUNT] [-a AMPLIFICATIONS] [-d DELETIONS]
                   [-min MINIMUM] [-max MAXIMUM]
                   {genome,exome} genome [target]
@@ -51,8 +71,10 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  -m NAME, --name NAME  a name to be used for simulated results. (default:
-                        test)
+  -o OUTPUT_DIR, --output_dir OUTPUT_DIR
+                        a name to be used to create the output directory
+                        (overrides existing directory with the same name).
+                        (default: test)
   --cnv_list CNV_LIST   path to a CNV list file in BED format chr | start |
                         end | variation. If not passed, it is randomly
                         generated using CNV list parameters below (default:
@@ -75,8 +97,8 @@ CNV list parameters:
                         0.2)
   -min MINIMUM, --minimum MINIMUM
                         minimum number of amplifications/deletions introduced
-                        (default: 10)
+                        (default: 3)
   -max MAXIMUM, --maximum MAXIMUM
                         maximum number of amplifications/deletions introduced
-                        (default: 15)
+                        (default: 10)
 ```

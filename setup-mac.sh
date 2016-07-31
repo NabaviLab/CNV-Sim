@@ -15,9 +15,6 @@ python get-pip.py
 # wget
 brew install wget
 
-# git
-brew install git
-
 # clean after installation
 rm -t tmp
 
