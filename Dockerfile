@@ -8,16 +8,16 @@ RUN pip install pysam && \
     pip install numpy && \
     pip install biopython
 
-RUN mkdir lib/ART && \
-    wget -O lib/ART/art.tgz http://www.niehs.nih.gov/research/resources/assets/docs/artbingreatsmokymountains041716linux32tgz.tgz && \
-    tar -xvzf lib/ART/art.tgz -C lib/ART && \
-    rm lib/ART/art.tgz && \
-    mv lib/ART/art_bin_GreatSmokyMountains/art_illumina lib/ART/art_illumina && \
-    rm -rf lib/ART/art_src_GreatSmokyMountains_Linux
+RUN mkdir cnvsim/ART && \
+    wget -O cnvsim/ART/art.tgz http://www.niehs.nih.gov/research/resources/assets/docs/artbingreatsmokymountains041716linux32tgz.tgz && \
+    tar -xvzf cnvsim/ART/art.tgz -C cnvsim/ART && \
+    rm cnvsim/ART/art.tgz && \
+    mv cnvsim/ART/art_bin_GreatSmokyMountains/art_illumina cnvsim/ART/art_illumina && \
+    rm -rf cnvsim/ART/art_src_GreatSmokyMountains_Linux
 
-COPY lib/Wessim /lib/Wessim
-COPY lib/exome_simulator.py /lib/exome_simulator.py
-COPY lib/genome_simulator.py /lib/genome_simulator.py
-COPY lib/fileio.py /lib/fileio.py
-COPY lib/__init__.py /lib/__init__.py
+COPY cnvsim/Wessim /cnvsim/Wessim
+COPY cnvsim/exome_simulator.py /cnvsim/exome_simulator.py
+COPY cnvsim/genome_simulator.py /cnvsim/genome_simulator.py
+COPY cnvsim/fileio.py /cnvsim/fileio.py
+COPY cnvsim/__init__.py /cnvsim/__init__.py
 COPY cnv-sim.py /
