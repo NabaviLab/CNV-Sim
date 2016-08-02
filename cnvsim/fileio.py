@@ -4,7 +4,6 @@ __author__ = 'Abdelrahman Hosny'
 
 import subprocess
 import os
-from Bio import SeqIO
 
 def readGenome(filename):
     '''
@@ -23,15 +22,6 @@ def readGenome(filename):
                 header = line.strip()
     return header, genome
 
-def readGenomeMultipleChromosomes(filename):
-    '''
-    Reads a FASTA file that contains multiple chromosomes
-    :param filename: the full path of the FASTA file
-    :return: a dictionary {chromosome: sequence}, whole genome length
-    '''
-    genome = SeqIO.to_dict(SeqIO.parse(open(filename), 'fasta'))
-    genome_length = sum(map(lambda x: len(x), genome.values()))
-    return genome, genome_length
 
 def readTargets(filename):
     '''
