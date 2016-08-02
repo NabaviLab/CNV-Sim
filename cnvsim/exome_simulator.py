@@ -177,7 +177,7 @@ def _callWessim(genome_file, target_file, output_file, number_of_reads, read_len
                      "-z", \
                      "-o" + output_file, \
                      "-t" + str(number_of_threads), \
-                     "-p"])
+                     "-p"], stderr=None)
     os.chdir('..')
 
 

@@ -126,7 +126,7 @@ def _callART(genome_file, output_file, read_length, fold_coverage=1):
                      "-i", genome_file, \
                      "-l", str(read_length), \
                      "-f", str(fold_coverage), \
-                     "-o", output_file])
+                     "-o", output_file], stderr=None)
     os.chdir("..")
 
 
