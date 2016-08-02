@@ -1,0 +1,31 @@
+<tool id="cnv_sim" name="Simulate CNV" version="0.9.0">
+    <description>in NGS short reads </description>
+    <command interpreter="python" detect_errors="exit_code">
+        #if $type.simulation_type=="whole_genome"
+            cnv-sim.py genome $reference
+        #else
+            cnv-sim.py exome $reference $target
+        #end if
+    </command>
+    <inputs>
+        <conditional name="type">
+            <param name="simulation_type" type="select" label="Simulation Type">
+                <option value="whole_genome">CNV Simulation in Whole Genome</option>
+                <option value="whole_exome">CNV Simulation in Exome Regions</option>
+            </param>
+            <when value="whole_genome">
+                <param format="fasta" name="reference" type="data" label="Reference Genome"/>
+            </when>
+            <when value="whole_exome">
+                <param format="fasta" name="reference" type="data" label="Reference Genome"/>
+                <param format="bed" name="target" type="data" label="Target Regions"/>
+            </when>
+        </conditional>
+    </inputs>
+    <outputs>
+        <data format="bed" name="cnv_list" from_work_dir="test/CNVList.bed"/>
+    </outputs>
+    <help>
+        This tool generates artificial NGS short reads in FASTQ format afficted by Copy Number Variations.
+    </help>
+</tool>
