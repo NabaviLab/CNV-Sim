@@ -43,7 +43,10 @@ Refer to the below [CNV-Sim options](#cnv-sim-options) section for more details 
 
 
 ### Use from Galaxy
-Coming soon!
+
+CNV-Sim is available as a [Galaxy](https://galaxyproject.org/) tool. 
+
+Download it from the Galaxy Tool Shed: [https://toolshed.g2.bx.psu.edu/view/ahosny/cnvsim/](https://toolshed.g2.bx.psu.edu/view/ahosny/cnvsim/)
 
 
 ## Required Input
