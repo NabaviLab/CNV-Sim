@@ -1,58 +1,194 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>CNV-Sim by NabaviLab</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <title>CNV-Sim by NabaviLab</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>CNV-Sim</h1>
-        <p>Copy Number Variations (CNV) Simulator</p>
+    <div id="container">
+      <div class="inner">
 
-        <p class="view"><a href="https://github.com/NabaviLab/CNV-Sim">View the Project on GitHub <small>NabaviLab/CNV-Sim</small></a></p>
+        <header>
+          <h1>CNV-Sim</h1>
+          <h2>Copy Number Variations (CNV) Simulator</h2>
+        </header>
 
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/NabaviLab/CNV-Sim/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/NabaviLab/CNV-Sim/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/NabaviLab/CNV-Sim" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
-        <ul>
-          <li><a href="https://github.com/NabaviLab/CNV-Sim/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/NabaviLab/CNV-Sim/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/NabaviLab/CNV-Sim">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h3>
-<a id="copy-number-variation-cnv-simulator" class="anchor" href="#copy-number-variation-cnv-simulator" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Copy Number Variation (CNV) Simulator</h3>
+        <hr>
 
-<p>In genomics, Copy Number Variations (CNVs) is a type of structureal variation in a genome where sections of the genome are repeated. The number if repetitions (duplications) varies between individuals in the human population.</p>
+        <section id="main_content">
+          <h1>
+<a id="copy-number-variation-simulator-cnv-sim" class="anchor" href="#copy-number-variation-simulator-cnv-sim" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Copy Number Variation Simulator (CNV-Sim)</h1>
+
+<p>In genomics, Copy Number Variations (CNVs) is a type of structural variation in a genome where sections of the genome are repeated. 
+The number if repetitions (duplications) varies between individuals in the human population.</p>
 
 <p>The Copy Number Variation Simulator (CNV Sim) is a tool used to generate a set of artificial DNA fragments for Next Generation Sequencing (NGS) read simulation.
-When aligned back to the reference genome, the artificial generated reads show variations in the whole exome regions. Variations can be either amplifications of deletions.
-CNV-Sim wraps the functionality of <a href="https://github.com/sak042/Wessim">Wessim</a> to introduce variations in the targets.</p>
+When aligned back to the reference genome, the artificial generated reads show variations in the CNV regions. Variations can be either amplifications of deletions.</p>
+
+<p>CNV-Sim offers two types of simulation:</p>
+
+<ul>
+<li>CNV simulation in whole genome. CNV-Sim wraps the functionality of <a href="http://www.niehs.nih.gov/research/resources/software/biostatistics/art/">ART</a> to introduce variations in the genome.</li>
+<li>CNV simulation in whole exome. CNV-Sim wraps the functionality of <a href="https://github.com/sak042/Wessim">Wessim</a> to introduce variations in the targets.<br>
+</li>
+</ul>
+
+<h2>
+<a id="use-cnv-sim" class="anchor" href="#use-cnv-sim" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Use CNV-Sim</h2>
 
 <h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<a id="download-as-a-standalone-application" class="anchor" href="#download-as-a-standalone-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Download as a standalone application</h3>
+
+<p>Run the setup script appropriate for your operating system to install required dependencies.</p>
+
+<p>Refer to the below <a href="#cnv-sim-options">CNV-Sim options</a> section for more details on how to use all available command-line options</p>
+
+<h3>
+<a id="download-as-a-docker-container" class="anchor" href="#download-as-a-docker-container" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Download as a Docker container</h3>
+
+<p>We prefer that you run CNV-Sim from the <a href="http://www.docker.com">Docker</a> container as it has all the dependencies installed inside yet; no need to go through any of the setup scripts included here.</p>
+
+<p><em>New to Docker?</em> Read this <a href="https://www.toptal.com/devops/getting-started-with-docker-simplifying-devops">blog post</a> to understand how it works
+(yet you don't need to be a Docker expert to get CNV-Sim Docker container running!).</p>
+
+<p><em>Install Docker:</em> <a href="https://docs.docker.com/engine/installation/#/on-linux">Linux</a>, <a href="https://docs.docker.com/docker-for-mac/">Mac OS</a> and <a href="https://docs.docker.com/docker-for-windows/">Windows</a></p>
+
+<p><em>How to use CNV-Sim from Docker container:</em></p>
+
+<div class="highlight highlight-source-shell"><pre>docker run -v <span class="pl-k">&lt;</span>absolute_local_path_to_input_directory<span class="pl-k">&gt;</span>:/my_data nabavilab/cnv-sim ./cnv-sim.py -o /my_data/<span class="pl-k">&lt;</span>simulation_name<span class="pl-k">&gt;</span> [OPTIONS] {genome, exome} /my_data/<span class="pl-k">&lt;</span>genome_file<span class="pl-k">&gt;</span> [/my_data/<span class="pl-k">&lt;</span>target_file<span class="pl-k">&gt;</span>]</pre></div>
+
+<p>where:</p>
+
+<ul>
+<li>
+<code>&lt;absolute_local_path_to_input_directory&gt;</code> is the directory where the required input files exist (genome.fa and target.bed if using exome simulation); <em>MUST</em> be absolute path </li>
+<li>
+<code>&lt;simulation_name&gt;</code> is used as the name of the output folder in your data directory, where the output of CNV Sim will be saved</li>
+<li>
+<code>&lt;genome_file&gt;</code> is the FASTA file name for the genome reference</li>
+<li>
+<code>&lt;target_file&gt;</code> is the BED file name for the targets (only if using exome as the simulation type)</li>
+</ul>
+
+<p>Refer to the below <a href="#cnv-sim-options">CNV-Sim options</a> section for more details on how to use all available command-line options</p>
+
+<h3>
+<a id="use-from-galaxy" class="anchor" href="#use-from-galaxy" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Use from Galaxy</h3>
+
+<p>CNV-Sim is available as a <a href="https://galaxyproject.org/">Galaxy</a> tool. </p>
+
+<p>Download it from the Galaxy Tool Shed: <a href="https://toolshed.g2.bx.psu.edu/view/ahosny/cnvsim/">https://toolshed.g2.bx.psu.edu/view/ahosny/cnvsim/</a></p>
+
+<h2>
+<a id="required-input" class="anchor" href="#required-input" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Required Input</h2>
+
+<h3>
+<a id="whole-genome" class="anchor" href="#whole-genome" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>whole genome</h3>
+
+<ul>
+<li>Reference genome in <a href="https://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format.</li>
+</ul>
+
+<h3>
+<a id="whole-exome" class="anchor" href="#whole-exome" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>whole exome</h3>
+
+<ul>
+<li>Reference genome in <a href="https://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format.</li>
+<li>Target exons file in <a href="https://genome.ucsc.edu/FAQ/FAQformat.html#format1">BED</a> format. 
+The exome consists of introns and exons. The target file here should indicate the start and end positions of exons (not exomes).</li>
+</ul>
+
+<h2>
+<a id="cnv-sim-options" class="anchor" href="#cnv-sim-options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>CNV-Sim options</h2>
+
+<pre><code>usage: cnv-sim.py [-h] [-o OUTPUT_DIR_NAME] [-n N_READS] [-l READ_LENGTH]
+                  [--cnv_list CNV_LIST] [-g REGIONS_COUNT] [-a AMPLIFICATIONS]
+                  [-d DELETIONS] [-min MINIMUM] [-max MAXIMUM]
+                  {genome,exome} genome [target]
+
+positional arguments:
+  {genome,exome}        simulate copy number variations in whole genome or
+                        exome regions
+  genome                path to the referece genome file in FASTA format
+  target                path to the target regions file in BED format (if
+                        using exome) (default: None)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -o OUTPUT_DIR_NAME, --output_dir_name OUTPUT_DIR_NAME
+                        a name to be used to create the output directory
+                        (overrides existing directory with the same name).
+                        (default: test)
+  -n N_READS, --n_reads N_READS
+                        total number of reads without variations (default:
+                        10000)
+  -l READ_LENGTH, --read_length READ_LENGTH
+                        read length (bp) (default: 100)
+  --cnv_list CNV_LIST   path to a CNV list file in BED format chr | start |
+                        end | variation. If not passed, it is randomly
+                        generated using CNV list parameters below (default:
+                        None)
+
+CNV list parameters:
+  parameters to be used if CNV list is not passed
+
+  -g REGIONS_COUNT, --regions_count REGIONS_COUNT
+                        number of CNV regions to be randomly generated
+                        (default: 30)
+  -a AMPLIFICATIONS, --amplifications AMPLIFICATIONS
+                        percentage of amplifications in range [0.0: 1.0].
+                        (default: 0.3)
+  -d DELETIONS, --deletions DELETIONS
+                        percentage of deletions in range [0.0: 1.0]. (default:
+                        0.2)
+  -min MINIMUM, --minimum MINIMUM
+                        minimum number of amplifications/deletions introduced
+                        (default: 3)
+  -max MAXIMUM, --maximum MAXIMUM
+                        maximum number of amplifications/deletions introduced
+                        (default: 10)
+</code></pre>
+
+<h2>
+<a id="licnese" class="anchor" href="#licnese" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Licnese</h2>
+
+<p>The MIT License (MIT)</p>
+
+<p>Copyright (c) 2016 NabaviLab</p>
+
+<h2>
+<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h2>
 
 <p>Abdelrahman Hosny (<a href="https://github.com/abdelrahmanhosny" class="user-mention">@abdelrahmanhosny</a>) and Sheida Nabavi (<a href="https://github.com/sheidaN" class="user-mention">@sheidaN</a>)</p>
 
-<h3>
-<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
+<h2>
+<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h2>
 
 <p>Having trouble with running CNV-Sim? <a href="mailto:abdelrahman.hosny@ieee.org">contact us</a> and we’ll help you sort it out.</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/NabaviLab">NabaviLab</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+        </section>
+
+        <footer>
+          CNV-Sim is maintained by <a href="https://github.com/NabaviLab">NabaviLab</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
   </body>
 </html>
