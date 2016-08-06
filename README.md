@@ -11,8 +11,6 @@ CNV-Sim offers two types of simulation:
 - CNV simulation in whole exome. CNV-Sim wraps the functionality of [Wessim](https://github.com/sak042/Wessim) to introduce variations in the targets.  
 
 ## Use CNV-Sim
-### CNV-Sim website
-Coming soon!
 
 ### Download as a standalone application
 Run the setup script appropriate for your operating system to install required dependencies.
@@ -31,7 +29,7 @@ We prefer that you run CNV-Sim from the [Docker](http://www.docker.com) containe
 
 
 ```shell
-docker run -v <absolute_local_path_to_input_directory>:/input nabavilab/cnv-sim ./cnv-sim.py -o /input/<simulation_name> [OPTIONS] {genome, exome} /input/<genome_file> [/input/<target_file>]
+docker run -v <absolute_local_path_to_input_directory>:/my_data nabavilab/cnv-sim ./cnv-sim.py -o /my_data/<simulation_name> [OPTIONS] {genome, exome} /my_data/<genome_file> [/my_data/<target_file>]
 ```
 
 where:
@@ -47,8 +45,6 @@ Refer to the below [CNV-Sim options](#cnv-sim-options) section for more details 
 ### Use from Galaxy
 Coming soon!
 
-### Use from Bioconductor
-Coming soon!
 
 ## Required Input
 ### whole genome
@@ -61,9 +57,9 @@ The exome consists of introns and exons. The target file here should indicate th
  
 ## CNV-Sim options
 ```
-usage: cnv-sim.py [-h] [-o OUTPUT_DIR] [--cnv_list CNV_LIST] [-n N_READS]
-                  [-g REGIONS_COUNT] [-a AMPLIFICATIONS] [-d DELETIONS]
-                  [-min MINIMUM] [-max MAXIMUM]
+usage: cnv-sim.py [-h] [-o OUTPUT_DIR_NAME] [-n N_READS] [-l READ_LENGTH]
+                  [--cnv_list CNV_LIST] [-g REGIONS_COUNT] [-a AMPLIFICATIONS]
+                  [-d DELETIONS] [-min MINIMUM] [-max MAXIMUM]
                   {genome,exome} genome [target]
 
 positional arguments:
@@ -75,17 +71,19 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  -o OUTPUT_DIR, --output_dir OUTPUT_DIR
+  -o OUTPUT_DIR_NAME, --output_dir_name OUTPUT_DIR_NAME
                         a name to be used to create the output directory
                         (overrides existing directory with the same name).
                         (default: test)
+  -n N_READS, --n_reads N_READS
+                        total number of reads without variations (default:
+                        10000)
+  -l READ_LENGTH, --read_length READ_LENGTH
+                        read length (bp) (default: 100)
   --cnv_list CNV_LIST   path to a CNV list file in BED format chr | start |
                         end | variation. If not passed, it is randomly
                         generated using CNV list parameters below (default:
                         None)
-  -n N_READS, --n_reads N_READS
-                        total number of reads without variations (default:
-                        10000)
 
 CNV list parameters:
   parameters to be used if CNV list is not passed
@@ -95,7 +93,7 @@ CNV list parameters:
                         (default: 30)
   -a AMPLIFICATIONS, --amplifications AMPLIFICATIONS
                         percentage of amplifications in range [0.0: 1.0].
-                        (default: 0.5)
+                        (default: 0.3)
   -d DELETIONS, --deletions DELETIONS
                         percentage of deletions in range [0.0: 1.0]. (default:
                         0.2)

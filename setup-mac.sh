@@ -33,7 +33,7 @@ brew install homebrew/science/bedtools
 # install ART
 mkdir cnvsim/ART
 wget -O cnvsim/ART/art.tgz http://www.niehs.nih.gov/research/resources/assets/docs/artsrcgreatsmokymountains041716macostgz.tgz
-tar -xvzf cnvsim/ART/art.tgz -C lib/ART
+tar -xvzf cnvsim/ART/art.tgz -C cnvsim/ART
 rm cnvsim/ART/art.tgz
 mv cnvsim/ART/art_src_GreatSmokyMountains_MacOS/art_illumina cnvsim/ART/art_illumina
 rm -rf cnvsim/ART/art_src_GreatSmokyMountains_MacOS

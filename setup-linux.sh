@@ -24,7 +24,7 @@ sudo apt-get install bedtools
 # install ART
 mkdir lib/ART
 wget -O cnvsim/ART/art.tgz http://www.niehs.nih.gov/research/resources/assets/docs/artsrcgreatsmokymountains041716linuxtgz.tgz
-tar -xvzf cnvsim/ART/art.tgz -C lib/ART
+tar -xvzf cnvsim/ART/art.tgz -C cnvsim/ART
 rm cnvsim/ART/art.tgz
 mv cnvsim/ART/art_src_GreatSmokyMountains_Linux/art_illumina cnvsim/ART/art_illumina
 rm -rf cnvsim/ART/art_src_GreatSmokyMountains_Linux

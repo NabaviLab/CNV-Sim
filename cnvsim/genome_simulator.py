@@ -124,6 +124,9 @@ def _callART(genome_file, output_file, read_length, fold_coverage=1):
     subprocess.call(["./art_illumina", \
                      "-sam", \
                      "-i", genome_file, \
+                     "-p", \
+                     "-m", "200", \
+                     "-s", "10", \
                      "-l", str(read_length), \
                      "-f", str(fold_coverage), \
                      "-o", output_file], stderr=None)

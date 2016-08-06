@@ -59,20 +59,20 @@ def mergeWessimReads(tmp_dir, output_dir):
     merges the base reads with normal and cnv
     :return: null
     '''
-    base_file_1 = os.path.join(tmp_dir, "base_1.fastq.gz")
-    base_file_2 = os.path.join(tmp_dir, "base_2.fastq.gz")
-    normal_file_1 = os.path.join(tmp_dir, "control_1.fastq.gz")
-    normal_file_2 = os.path.join(tmp_dir, "control_2.fastq.gz")
-    cnv_file_1 = os.path.join(tmp_dir, "cnv_1.fastq.gz")
-    cnv_file_2 = os.path.join(tmp_dir, "cnv_2.fastq.gz")
+    base_file_1 = os.path.join(tmp_dir, "base_1.fastq")
+    base_file_2 = os.path.join(tmp_dir, "base_2.fastq")
+    normal_file_1 = os.path.join(tmp_dir, "control_1.fastq")
+    normal_file_2 = os.path.join(tmp_dir, "control_2.fastq")
+    cnv_file_1 = os.path.join(tmp_dir, "cnv_1.fastq")
+    cnv_file_2 = os.path.join(tmp_dir, "cnv_2.fastq")
 
-    with open(os.path.join(output_dir, "control_1.fastq.gz"), "w") as f:
+    with open(os.path.join(output_dir, "control_1.fastq"), "w") as f:
         subprocess.call(["cat", base_file_1, normal_file_1], stdout=f)
-    with open(os.path.join(output_dir, "control_2.fastq.gz"), "w") as f:
+    with open(os.path.join(output_dir, "control_2.fastq"), "w") as f:
         subprocess.call(["cat", base_file_2, normal_file_2], stdout=f)
-    with open(os.path.join(output_dir, "cnv_1.fastq.gz"), "w") as f:
+    with open(os.path.join(output_dir, "cnv_1.fastq"), "w") as f:
         subprocess.call(["cat", base_file_1, cnv_file_1], stdout=f)
-    with open(os.path.join(output_dir, "cnv_2.fastq.gz"), "w") as f:
+    with open(os.path.join(output_dir, "cnv_2.fastq"), "w") as f:
         subprocess.call(["cat", base_file_2, cnv_file_2], stdout=f)
 
 def mergeARTReads(tmp_dir, output_dir):
@@ -80,14 +80,21 @@ def mergeARTReads(tmp_dir, output_dir):
     merges the base reads with normal and cnv
     :return: null
     '''
-    base_file = os.path.join(tmp_dir, "base.fq")
-    normal_file = os.path.join(tmp_dir, "control.fq")
-    cnv_file = os.path.join(tmp_dir, "cnv.fq")
+    base_file_1 = os.path.join(tmp_dir, "base1.fq")
+    base_file_2 = os.path.join(tmp_dir, "base2.fq")
+    normal_file_1 = os.path.join(tmp_dir, "control1.fq")
+    normal_file_2 = os.path.join(tmp_dir, "control2.fq")
+    cnv_file_1 = os.path.join(tmp_dir, "cnv1.fq")
+    cnv_file_2 = os.path.join(tmp_dir, "cnv2.fq")
 
-    with open(os.path.join(output_dir, "control.fq"), "w") as f:
-        subprocess.call(["cat", base_file, normal_file], stdout=f)
-    with open(os.path.join(output_dir, "cnv.fq"), "w") as f:
-        subprocess.call(["cat", base_file, cnv_file], stdout=f)
+    with open(os.path.join(output_dir, "control_1.fastq"), "w") as f:
+        subprocess.call(["cat", base_file_1, normal_file_1], stdout=f)
+    with open(os.path.join(output_dir, "control_2.fastq"), "w") as f:
+        subprocess.call(["cat", base_file_2, normal_file_2], stdout=f)
+    with open(os.path.join(output_dir, "cnv_1.fastq"), "w") as f:
+        subprocess.call(["cat", base_file_1, cnv_file_1], stdout=f)
+    with open(os.path.join(output_dir, "cnv_2.fastq"), "w") as f:
+        subprocess.call(["cat", base_file_2, cnv_file_2], stdout=f)
 
 def clean(tmp_dir):
     subprocess.call(["rm", "-rf", tmp_dir])
