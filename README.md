@@ -107,3 +107,8 @@ CNV list parameters:
                         maximum number of amplifications/deletions introduced
                         (default: 10)
 ```
+
+## Licnese
+The MIT License (MIT)
+
+Copyright (c) 2016 NabaviLab
