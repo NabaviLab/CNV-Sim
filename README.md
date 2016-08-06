@@ -108,7 +108,7 @@ CNV list parameters:
                         (default: 10)
 ```
 
-## Licnese
+## License
 The MIT License (MIT)
 
 Copyright (c) 2016 NabaviLab
