@@ -50,6 +50,8 @@ Download it from the Galaxy Tool Shed: [https://toolshed.g2.bx.psu.edu/view/ahos
 
 
 ## Required Input
+**IMPORTANT:** for the current version of CNV-Sim, the underlying *pysam* library used Wessim might not be able to handle large reference files (such as the whole human genome) when introducing amplifications. To avoid errors, simulate CNV in one chromosome at a time (reference and target for one chromosome in a single run). We are working on handling large files seamlessly and will be released in the next version.
+
 ### whole genome
 - Reference genome in [FASTA](https://en.wikipedia.org/wiki/FASTA_format) format.
 
