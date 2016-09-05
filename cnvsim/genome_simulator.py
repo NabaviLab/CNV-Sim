@@ -231,6 +231,6 @@ def simulate_genome_cnv(simulation_parameters, cnv_list_parameters=None):
     fileio.mergeARTReads(simulation_parameters['tmp_dir'], simulation_parameters['output_dir'])
 
     _log("cleaning temporary files ..")
-    # fileio.clean(simulation_parameters['tmp_dir'])
+    fileio.clean(simulation_parameters['tmp_dir'])
 
     _log("simulation completed. find results in " + simulation_parameters['output_dir'])

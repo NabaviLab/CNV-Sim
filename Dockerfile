@@ -8,7 +8,7 @@ RUN pip install pysam && \
     pip install numpy && \
     pip install biopython
 
-RUN mkdir cnvsim/ART && \
+RUN mkdir -p cnvsim/ART && \
     wget -O cnvsim/ART/art.tgz http://www.niehs.nih.gov/research/resources/assets/docs/artbingreatsmokymountains041716linux32tgz.tgz && \
     tar -xvzf cnvsim/ART/art.tgz -C cnvsim/ART && \
     rm cnvsim/ART/art.tgz && \

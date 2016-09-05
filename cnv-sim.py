@@ -23,9 +23,9 @@ def main():
     parser.add_argument("target", type=file, nargs='?', default=None, \
                         help="path to the target regions file in BED format (if using exome)")
 
-    parser.add_argument("-o", "--output_dir_name",type=str, default="test", \
+    parser.add_argument("-o", "--output_dir_name",type=str, default="simulation_output", \
                         help="a name to be used to create the output directory (overrides existing directory with the same name).")
-    parser.add_argument("-n", "--n_reads", type=int, default=10000, \
+    parser.add_argument("-n", "--n_reads", type=int, default=100000, \
                         help="total number of reads without variations")
     parser.add_argument("-l", "--read_length", type=int, default=100, \
                         help="read length (bp)")
@@ -33,16 +33,20 @@ def main():
                         help="path to a CNV list file in BED format chr | start | end | variation. If not passed, it is randomly generated using CNV list parameters below")
 
     cnv_sim_group = parser.add_argument_group('CNV list parameters', "parameters to be used if CNV list is not passed")
-    cnv_sim_group.add_argument("-g", "--regions_count", type=int, default=30, \
-                        help="number of CNV regions to be randomly generated")
-    cnv_sim_group.add_argument("-a", "--amplifications", type=float, default=0.30, \
+    cnv_sim_group.add_argument("-g", "--regions_count", type=int, default=20, \
+                        help="number of CNV regions to be generated randomly")
+    cnv_sim_group.add_argument("-r_min", "--region_minimum_length", type=int, default=100, \
+                               help="minimum length of each CNV region")
+    cnv_sim_group.add_argument("-r_max", "--region_maximum_length", type=int, default=100000, \
+                               help="maximum length of each CNV region")
+    cnv_sim_group.add_argument("-a", "--amplifications", type=float, default=0.50, \
                         help="percentage of amplifications in range [0.0: 1.0].")
-    cnv_sim_group.add_argument("-d", "--deletions", type=float, default=0.20, \
+    cnv_sim_group.add_argument("-d", "--deletions", type=float, default=0.50, \
                         help="percentage of deletions in range [0.0: 1.0].")
-    cnv_sim_group.add_argument("-min", "--minimum", type=float, default=3, \
-                        help="minimum number of amplifications/deletions introduced")
-    cnv_sim_group.add_argument("-max", "--maximum", type=float, default=10, \
-                        help="maximum number of amplifications/deletions introduced")
+    cnv_sim_group.add_argument("-cn_min", "--copy_number_minimum", type=float, default=3, \
+                        help="minimum level of variations (copy number) introduced")
+    cnv_sim_group.add_argument("-cn_max", "--copy_number_maximum", type=float, default=10, \
+                        help="maximum level of variation (copy number) introduced")
 
     args = parser.parse_args()
 
@@ -64,10 +68,12 @@ def main():
 
     cnv_list_parameters = {}
     cnv_list_parameters['regions_count'] = args.regions_count
+    cnv_list_parameters['minimum_length'] = args.region_minimum_length
+    cnv_list_parameters['maximum_length'] = args.region_maximum_length
     cnv_list_parameters['amplifications'] = args.amplifications
     cnv_list_parameters['deletions'] = args.deletions
-    cnv_list_parameters['minimum_variations'] = args.minimum
-    cnv_list_parameters['maximum_variations'] = args.maximum
+    cnv_list_parameters['minimum_variations'] = args.copy_number_minimum
+    cnv_list_parameters['maximum_variations'] = args.copy_number_maximum
 
     if simulation_parameters['type'] == 'genome':
         simulate_genome_cnv(simulation_parameters, cnv_list_parameters)
