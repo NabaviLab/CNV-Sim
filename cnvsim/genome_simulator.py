@@ -53,16 +53,18 @@ def _generateCNVMask(mask_length, p_amplify, p_delete, min_variation, max_variat
     return cnv_mask
 
 
-def _generateCNVList(chromosome_length, number_of_regions, p_amplify, p_delete, min_variation, max_variation):
+def _generateCNVList(chromosome_length, number_of_regions, p_amplify, p_delete, min_variation, max_variation, region_min_length, region_max_length):
     '''
-
-    :param chromosome_length:
-    :param number_of_regions:
-    :param p_amplify:
-    :param p_delete:
-    :param min_variation:
-    :param max_variation:
-    :return:
+    This function generates a CNV list to be used for simulating the CNVs in the next step
+    :param chromosome_length: the length of the simulated chromosome
+    :param number_of_regions: the number of regions to be affected by CNVs
+    :param p_amplify: percentage of amplification
+    :param p_delete: percentage of deletions
+    :param min_variation: minimum level of variation
+    :param max_variation: maximum level of variation
+    :param region_min_length: minimum length of a CNV region
+    :param region_max_length: maximum length of a CNV region
+    :return: CNV list
     '''
     region_length = chromosome_length / number_of_regions
     start = 0
@@ -74,7 +76,7 @@ def _generateCNVList(chromosome_length, number_of_regions, p_amplify, p_delete, 
         jump_start = start + int(random.randrange(int(0.40*region_length), int(0.45*region_length)))
 
         # jump backward end
-        jump_end = end - int(random.randrange(int(0.40*region_length), int(0.45*region_length)))
+        jump_end = jump_start + random.randint(region_min_length, region_max_length) - 1
 
         cnv_list.append([jump_start, jump_end, mask[i]])
         start = end
@@ -140,7 +142,7 @@ def simulate_genome_cnv(simulation_parameters, cnv_list_parameters=None):
     :param cnv_list_parameters: a dictionary containing parameters for CNV List creation
     :return: None
     '''
-    _log('simulation type: whole genome')
+    _log('simulation type: whole genome sequencing')
 
     # create a temporary directory for intermediate files
     if not os.path.exists(simulation_parameters['tmp_dir']):
@@ -167,20 +169,26 @@ def simulate_genome_cnv(simulation_parameters, cnv_list_parameters=None):
 
     if simulation_parameters['cnv_list_file'] is None:
         # CNV list file
-        cnv_list_file = os.path.join(simulation_parameters['output_dir'], "CNVList.bed")
+        cnv_list_file = os.path.join(simulation_parameters['output_dir'], "copynumber.bed")
 
         _log("generating CNV list ..")
         cnv_list = _generateCNVList(len(genome), cnv_list_parameters['regions_count'], \
                                     cnv_list_parameters['amplifications'], cnv_list_parameters['deletions'], \
                                     cnv_list_parameters['minimum_variations'], \
-                                    cnv_list_parameters['maximum_variations'])
+                                    cnv_list_parameters['maximum_variations'], \
+                                    cnv_list_parameters['minimum_length'], \
+                                    cnv_list_parameters['maximum_length'])
         cnv_list = map(lambda l: [header.replace('>', '')] + l, cnv_list)
 
         with open(cnv_list_file, 'w') as f:
+            line = 'chrom\tchr_start\tchrom_stop\tnum_positions\tcopy_number\n'
+            f.write(line)
             for i, cnv_region in enumerate(cnv_list):
+                num_positions = cnv_region[2] - cnv_region[1] + 1
                 line = cnv_region[0] + '\t' \
                        + `cnv_region[1]` + '\t' \
                        + `cnv_region[2]` + '\t' \
+                       + `num_positions` + '\t' \
                        + `cnv_region[3]` + '\n'
                 f.write(line)
         _log("randomly generated CNV list saved to " + cnv_list_file)
@@ -190,8 +198,9 @@ def simulate_genome_cnv(simulation_parameters, cnv_list_parameters=None):
         with open(simulation_parameters['cnv_list_file'], "r") as f:
             cnv_list = []
             lines = f.readlines()
+            lines.pop(0)
             for line in lines:
-                chromosome, region_start, region_end, variation = line.strip().split("\t")
+                chromosome, region_start, region_end, num_positions, variation = line.strip().split("\t")
                 cnv_list.append((chromosome, int(region_start), int(region_end), int(variation)))
 
         _log("successfully loaded CNV list that contains " + `len(lines)` + " regions ..")

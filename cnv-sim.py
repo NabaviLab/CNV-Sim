@@ -25,7 +25,7 @@ def main():
 
     parser.add_argument("-o", "--output_dir_name",type=str, default="simulation_output", \
                         help="a name to be used to create the output directory (overrides existing directory with the same name).")
-    parser.add_argument("-n", "--n_reads", type=int, default=100000, \
+    parser.add_argument("-n", "--n_reads", type=int, default=10000, \
                         help="total number of reads without variations")
     parser.add_argument("-l", "--read_length", type=int, default=100, \
                         help="read length (bp)")
@@ -74,6 +74,10 @@ def main():
     cnv_list_parameters['deletions'] = args.deletions
     cnv_list_parameters['minimum_variations'] = args.copy_number_minimum
     cnv_list_parameters['maximum_variations'] = args.copy_number_maximum
+
+    if cnv_list_parameters['amplifications'] + cnv_list_parameters['deletions'] != 1.0:
+        log("ERROR: percentage of amplifications + percentage of deletions must be equal to 1.0")
+        exit()
 
     if simulation_parameters['type'] == 'genome':
         simulate_genome_cnv(simulation_parameters, cnv_list_parameters)

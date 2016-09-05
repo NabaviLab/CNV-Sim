@@ -20,7 +20,7 @@ def getScriptPath():
     return os.path.dirname(os.path.realpath(__file__))
 
 
-def _generateCNVMatrix(targets_list, regions_count):
+def _generateCNVMatrix(targets_list, regions_count, region_min_length, region_max_length):
     '''
     A function to randomly divide sequential exonic targets into whole CNV regions
     :param targets_list: a list of target exons loaded from the file provided by the user
@@ -28,22 +28,25 @@ def _generateCNVMatrix(targets_list, regions_count):
     '''
     regions_count -= 1
     number_of_targets = len(targets_list)
-    comine_size = number_of_targets / regions_count
-    cnv_matrix = []
+    combine_size = number_of_targets / regions_count
+    cnv_regions = []
 
     i = 0
     while True:
         if i == len(targets_list):
             break
 
-        first_target = i
-        i += comine_size
+        region_start = targets_list[i][1]
+        region_end = region_start + random.randint(region_min_length, region_max_length) - 1
+        cnv_regions.append((targets_list[i][0], region_start, region_end))
+
+        i += combine_size
         if i > len(targets_list):
             i = len(targets_list)
-        last_target = i
-        cnv_matrix.append(targets_list[first_target:last_target])
 
-    return cnv_matrix
+    cnv_matrix = _loadCNVMatrix(targets_list, cnv_regions)
+
+    return cnv_matrix, cnv_regions
 
 
 def _loadCNVMatrix(targets_list, cnv_regions):
@@ -64,8 +67,12 @@ def _loadCNVMatrix(targets_list, cnv_regions):
             target_chromosome = target[0]
             target_start = target[1]
             target_end = target[2]
-            if target_chromosome == region_chromosome and target_start >= region_start and target_end <= region_end:
-                region_targets.append(target)
+            if target_chromosome == region_chromosome and target_start >= region_start:
+                if target_end <= region_end:
+                    region_targets.append(target)
+                elif target_start <= region_end:
+                    truncated_target = (target_chromosome, target_start, region_end)
+                    region_targets.append(truncated_target)
 
         cnv_matrix.append(region_targets)
 
@@ -187,7 +194,7 @@ def simulate_exome_cnv(simulation_parameters, cnv_list_parameters=None):
     :param simulation_parameters: a dictionary containing parameters for simulation
     :return: simulation status {'simulation_status': bool, 'message': str}
     '''
-    _log('simulation type: whole exome')
+    _log('simulation type: targeted exome sequencing')
 
     # create a temporary directory for intermediate files
     if not os.path.exists(simulation_parameters['tmp_dir']):
@@ -198,7 +205,7 @@ def simulate_exome_cnv(simulation_parameters, cnv_list_parameters=None):
         os.makedirs(simulation_parameters['output_dir'])
 
     if simulation_parameters['target_file'] is None:
-        _log("ERROR: target file cannot be None for whole exome simulation!")
+        _log("ERROR: target file cannot be None for target exome simulation!")
         fileio.clean(simulation_parameters['output_dir'])
         fileio.clean(simulation_parameters['tmp_dir'])
         exit()
@@ -231,19 +238,24 @@ def simulate_exome_cnv(simulation_parameters, cnv_list_parameters=None):
 
     if simulation_parameters['cnv_list_file'] is None:
         # CNV list file
-        cnv_list_file = os.path.join(simulation_parameters['output_dir'], "CNVList.bed")
+        cnv_list_file = os.path.join(simulation_parameters['output_dir'], "copynumber.bed")
 
         _log("generating CNV list ..")
-        cnv_matrix = _generateCNVMatrix(targets, cnv_list_parameters['regions_count'])
+        cnv_matrix, cnv_regions = _generateCNVMatrix(targets, cnv_list_parameters['regions_count'], \
+                                        cnv_list_parameters['minimum_length'], cnv_list_parameters['maximum_length'])
         mask = _generateCNVMask(len(cnv_matrix), cnv_list_parameters['amplifications'], \
                                 cnv_list_parameters['deletions'], cnv_list_parameters['minimum_variations'], \
                                                cnv_list_parameters['maximum_variations'])
 
         with open(cnv_list_file, 'w') as f:
-            for i, cnv_region in enumerate(cnv_matrix):
-                line = cnv_region[0][0] + '\t' \
-                       + `cnv_region[0][1]` + '\t' \
-                       + `cnv_region[-1][2]` + '\t' \
+            line = 'chrom\tchr_start\tchrom_stop\tnum_positions\tcopy_number\n'
+            f.write(line)
+            for i, cnv_region in enumerate(cnv_regions):
+                num_positions = cnv_region[2] - cnv_region[1] + 1
+                line = cnv_region[0] + '\t' \
+                       + `cnv_region[1]` + '\t' \
+                       + `cnv_region[2]` + '\t' \
+                       + `num_positions` + '\t' \
                        + `mask[i]` + '\n'
                 f.write(line)
         _log("randomly generated CNV list saved to " + cnv_list_file)
@@ -252,8 +264,9 @@ def simulate_exome_cnv(simulation_parameters, cnv_list_parameters=None):
         with open(simulation_parameters['cnv_list_file'], "r") as f:
             cnv_list = []
             lines = f.readlines()
+            lines.pop(0)
             for line in lines:
-                chromosome, region_start, region_end, variation = line.strip().split("\t")
+                chromosome, region_start, region_end, num_positions, variation = line.strip().split("\t")
                 cnv_list.append((chromosome, int(region_start), int(region_end), int(variation)))
 
             cnv_matrix = _loadCNVMatrix(targets, cnv_list)
