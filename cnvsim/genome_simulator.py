@@ -105,7 +105,7 @@ def _simulateCNV(genome, cnv_list, read_length):
             cnv_genome.append(amplification)
         elif variation < 0:
             # deletion
-            deletion = genome[start-read_length: start] + sequence * variation + genome[end:end+read_length]
+            deletion = genome[start-read_length: start] + sequence * abs(variation) + genome[end:end+read_length]
             control_genome.append(deletion)
 
     return ''.join(control_genome), ''.join(cnv_genome)
@@ -231,6 +231,6 @@ def simulate_genome_cnv(simulation_parameters, cnv_list_parameters=None):
     fileio.mergeARTReads(simulation_parameters['tmp_dir'], simulation_parameters['output_dir'])
 
     _log("cleaning temporary files ..")
-    fileio.clean(simulation_parameters['tmp_dir'])
+    # fileio.clean(simulation_parameters['tmp_dir'])
 
     _log("simulation completed. find results in " + simulation_parameters['output_dir'])
