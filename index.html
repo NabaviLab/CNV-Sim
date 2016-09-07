@@ -34,17 +34,17 @@
           <h1>
 <a id="copy-number-variation-simulator-cnv-sim" class="anchor" href="#copy-number-variation-simulator-cnv-sim" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Copy Number Variation Simulator (CNV-Sim)</h1>
 
-<p>In genomics, Copy Number Variations (CNVs) is a type of structural variation in a genome where sections of the genome are repeated. 
-The number if repetitions (duplications) varies between individuals in the human population.</p>
+<p>In genomics, Copy Number Variations (CNVs) is a type of structural variation in a genome where sections of the genome are duplicated or deleted. 
+The number of variations (duplications/deletions) varies between individuals in the human population.</p>
 
-<p>The Copy Number Variation Simulator (CNV Sim) is a tool used to generate a set of artificial DNA fragments for Next Generation Sequencing (NGS) read simulation.
-When aligned back to the reference genome, the artificial generated reads show variations in the CNV regions. Variations can be either amplifications of deletions.</p>
+<p>The Copy Number Variation Simulator (CNV-Sim) is a simulation tool that extends the functionality of existing next-generation sequencing read simulators 
+to introduce copy number variations in the generated reads. The resulting reads encompass amplifications as well as deletions according to a predefined list of variant regions.</p>
 
-<p>CNV-Sim offers two types of simulation:</p>
+<p>CNV-Sim aids testing and benchmarking tools for copy number variation detection and analysis. The tool offers two types of simulation:</p>
 
 <ul>
-<li>CNV simulation in whole genome. CNV-Sim wraps the functionality of <a href="http://www.niehs.nih.gov/research/resources/software/biostatistics/art/">ART</a> to introduce variations in the genome.</li>
-<li>CNV simulation in whole exome. CNV-Sim wraps the functionality of <a href="https://github.com/sak042/Wessim">Wessim</a> to introduce variations in the targets.<br>
+<li>CNV simulation in whole genome. CNV-Sim utilizes the functionality of <a href="http://www.niehs.nih.gov/research/resources/software/biostatistics/art/">ART</a> to introduce variations in the genome.</li>
+<li>CNV simulation in targeted exome. CNV-Sim utilizes the functionality of <a href="https://github.com/sak042/Wessim">Wessim</a> to introduce variations in the targets.<br>
 </li>
 </ul>
 
@@ -54,21 +54,32 @@ When aligned back to the reference genome, the artificial generated reads show v
 <h3>
 <a id="download-as-a-standalone-application" class="anchor" href="#download-as-a-standalone-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Download as a standalone application</h3>
 
-<p>Run the setup script appropriate for your operating system to install required dependencies.</p>
+<p>Run the setup script appropriate for your operating system to install required dependencies. </p>
+
+<p><em>Alternatively</em>, install the following dependencies on your machine (the setup script does all that for you):</p>
+
+<ul>
+<li><a href="https://www.python.org/downloads/">Python 2.7</a></li>
+<li><a href="https://pypi.python.org/pypi/pip">Python pip</a></li>
+<li><a href="https://github.com/pysam-developers/pysam">Pysam Module</a></li>
+<li><a href="http://biopython.org/">Biopython Module</a></li>
+<li><a href="http://bedtools.readthedocs.io/en/latest/">bedtools</a></li>
+<li>Download <a href="http://www.niehs.nih.gov/research/resources/software/art">ART simulator</a> and put the binary file <code>art_illumina</code> in <code>cnvsim/ART</code> directory.</li>
+</ul>
 
 <p>Refer to the below <a href="#cnv-sim-options">CNV-Sim options</a> section for more details on how to use all available command-line options</p>
 
 <h3>
-<a id="download-as-a-docker-container" class="anchor" href="#download-as-a-docker-container" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Download as a Docker container</h3>
+<a id="download-as-a-docker-image" class="anchor" href="#download-as-a-docker-image" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Download as a Docker image</h3>
 
 <p>We prefer that you run CNV-Sim from the <a href="http://www.docker.com">Docker</a> container as it has all the dependencies installed inside yet; no need to go through any of the setup scripts included here.</p>
 
-<p><em>New to Docker?</em> Read this <a href="https://www.toptal.com/devops/getting-started-with-docker-simplifying-devops">blog post</a> to understand how it works
+<p><strong>New to Docker?</strong> Read this <a href="https://www.toptal.com/devops/getting-started-with-docker-simplifying-devops">blog post</a> to understand how it works
 (yet you don't need to be a Docker expert to get CNV-Sim Docker container running!).</p>
 
-<p><em>Install Docker:</em> <a href="https://docs.docker.com/engine/installation/#/on-linux">Linux</a>, <a href="https://docs.docker.com/docker-for-mac/">Mac OS</a> and <a href="https://docs.docker.com/docker-for-windows/">Windows</a></p>
+<p><strong>Install Docker:</strong> <a href="https://docs.docker.com/engine/installation/#/on-linux">Linux</a>, <a href="https://docs.docker.com/docker-for-mac/">Mac OS</a> and <a href="https://docs.docker.com/docker-for-windows/">Windows</a></p>
 
-<p><em>How to use CNV-Sim from Docker container:</em></p>
+<p><strong>How to use CNV-Sim Docker image:</strong></p>
 
 <div class="highlight highlight-source-shell"><pre>docker run -v <span class="pl-k">&lt;</span>absolute_local_path_to_input_directory<span class="pl-k">&gt;</span>:/my_data nabavilab/cnv-sim ./cnv-sim.py -o /my_data/<span class="pl-k">&lt;</span>simulation_name<span class="pl-k">&gt;</span> [OPTIONS] {genome, exome} /my_data/<span class="pl-k">&lt;</span>genome_file<span class="pl-k">&gt;</span> [/my_data/<span class="pl-k">&lt;</span>target_file<span class="pl-k">&gt;</span>]</pre></div>
 
@@ -85,7 +96,8 @@ When aligned back to the reference genome, the artificial generated reads show v
 <code>&lt;target_file&gt;</code> is the BED file name for the targets (only if using exome as the simulation type)</li>
 </ul>
 
-<p>Refer to the below <a href="#cnv-sim-options">CNV-Sim options</a> section for more details on how to use all available command-line options</p>
+<p>Refer to the below <a href="#cnv-sim-options">CNV-Sim options</a> section for more details on how to use all available command-line options or 
+simply type: <code>docker run nabavilab/cnv-sim ./cnv-sim -h</code> to read the help.</p>
 
 <h3>
 <a id="use-from-galaxy" class="anchor" href="#use-from-galaxy" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Use from Galaxy</h3>
@@ -97,6 +109,8 @@ When aligned back to the reference genome, the artificial generated reads show v
 <h2>
 <a id="required-input" class="anchor" href="#required-input" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Required Input</h2>
 
+<p><strong>IMPORTANT:</strong> for the current version of CNV-Sim, the underlying <em>pysam</em> library used Wessim might not be able to handle large reference files (such as the whole human genome) when introducing amplifications. To avoid errors, simulate CNV in one chromosome at a time (reference and target for one chromosome in a single run). We are working on handling large files seamlessly and will be released in the next version.</p>
+
 <h3>
 <a id="whole-genome" class="anchor" href="#whole-genome" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>whole genome</h3>
 
@@ -105,7 +119,7 @@ When aligned back to the reference genome, the artificial generated reads show v
 </ul>
 
 <h3>
-<a id="whole-exome" class="anchor" href="#whole-exome" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>whole exome</h3>
+<a id="targeted-exome" class="anchor" href="#targeted-exome" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>targeted exome</h3>
 
 <ul>
 <li>Reference genome in <a href="https://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format.</li>
@@ -116,65 +130,68 @@ The exome consists of introns and exons. The target file here should indicate th
 <h2>
 <a id="cnv-sim-options" class="anchor" href="#cnv-sim-options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>CNV-Sim options</h2>
 
-<pre><code>usage: cnv-sim.py [-h] [-o OUTPUT_DIR_NAME] [-n N_READS] [-l READ_LENGTH]
-                  [--cnv_list CNV_LIST] [-g REGIONS_COUNT] [-a AMPLIFICATIONS]
-                  [-d DELETIONS] [-min MINIMUM] [-max MAXIMUM]
+<pre><code>Usage: cnv-sim.py [-h] [-v] [-o OUTPUT_DIR_NAME] [-n N_READS] [-l READ_LENGTH]
+                  [--cnv_list CNV_LIST] [-g REGIONS_COUNT]
+                  [-r_min REGION_MINIMUM_LENGTH]
+                  [-r_max REGION_MAXIMUM_LENGTH] [-a AMPLIFICATIONS]
+                  [-d DELETIONS] [-cn_min COPY_NUMBER_MINIMUM]
+                  [-cn_max COPY_NUMBER_MAXIMUM]
                   {genome,exome} genome [target]
 
-positional arguments:
+Generates NGS short reads that encompass copy number variations in whole
+genome and targeted exome sequencing
+
+Positional arguments:
   {genome,exome}        simulate copy number variations in whole genome or
                         exome regions
   genome                path to the referece genome file in FASTA format
   target                path to the target regions file in BED format (if
-                        using exome) (default: None)
+                        using exome)
 
-optional arguments:
+Optional arguments:
   -h, --help            show this help message and exit
+  -v, --version         Show program's version number and exit.
   -o OUTPUT_DIR_NAME, --output_dir_name OUTPUT_DIR_NAME
                         a name to be used to create the output directory
                         (overrides existing directory with the same name).
-                        (default: test)
   -n N_READS, --n_reads N_READS
-                        total number of reads without variations (default:
-                        10000)
+                        total number of reads without variations
   -l READ_LENGTH, --read_length READ_LENGTH
-                        read length (bp) (default: 100)
+                        read length (bp)
   --cnv_list CNV_LIST   path to a CNV list file in BED format chr | start |
                         end | variation. If not passed, it is randomly
-                        generated using CNV list parameters below (default:
-                        None)
+                        generated using CNV list parameters below
 
 CNV list parameters:
   parameters to be used if CNV list is not passed
 
   -g REGIONS_COUNT, --regions_count REGIONS_COUNT
-                        number of CNV regions to be randomly generated
-                        (default: 30)
+                        number of CNV regions to be generated randomly
+  -r_min REGION_MINIMUM_LENGTH, --region_minimum_length REGION_MINIMUM_LENGTH
+                        minimum length of each CNV region
+  -r_max REGION_MAXIMUM_LENGTH, --region_maximum_length REGION_MAXIMUM_LENGTH
+                        maximum length of each CNV region
   -a AMPLIFICATIONS, --amplifications AMPLIFICATIONS
                         percentage of amplifications in range [0.0: 1.0].
-                        (default: 0.3)
   -d DELETIONS, --deletions DELETIONS
-                        percentage of deletions in range [0.0: 1.0]. (default:
-                        0.2)
-  -min MINIMUM, --minimum MINIMUM
-                        minimum number of amplifications/deletions introduced
-                        (default: 3)
-  -max MAXIMUM, --maximum MAXIMUM
-                        maximum number of amplifications/deletions introduced
-                        (default: 10)
+                        percentage of deletions in range [0.0: 1.0].
+  -cn_min COPY_NUMBER_MINIMUM, --copy_number_minimum COPY_NUMBER_MINIMUM
+                        minimum level of variations (copy number) introduced
+  -cn_max COPY_NUMBER_MAXIMUM, --copy_number_maximum COPY_NUMBER_MAXIMUM
+                        maximum level of variation (copy number) introduced
 </code></pre>
+
+<h2>
+<a id="contributor" class="anchor" href="#contributor" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributor</h2>
+
+<p>Abdelrahman Hosny (<a href="https://github.com/abdelrahmanhosny" class="user-mention">@abdelrahmanhosny</a>)</p>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
 
 <p>The MIT License (MIT)</p>
 
-<p>Copyright (c) 2016 NabaviLab</p>
-
-<h2>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h2>
-
-<p>Abdelrahman Hosny (<a href="https://github.com/abdelrahmanhosny" class="user-mention">@abdelrahmanhosny</a>) and Sheida Nabavi (<a href="https://github.com/sheidaN" class="user-mention">@sheidaN</a>)</p>
+<p>Copyright (c) 2016 <a href="https://nabavilab.github.io/">NabaviLab</a></p>
 
 <h2>
 <a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h2>
