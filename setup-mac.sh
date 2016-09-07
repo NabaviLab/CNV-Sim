@@ -21,9 +21,6 @@ rm -t tmp
 # Install pysam library
 pip install pysam
 
-# Install numpy library
-pip install numpy
-
 # Install Bio Python
 pip install biopython
 

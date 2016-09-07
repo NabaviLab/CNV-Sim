@@ -12,9 +12,6 @@ sudo apt-get install wget
 # Install pysam library
 sudo pip install pysam
 
-# Install numpy library
-sudo pip install numpy
-
 # Install Bio Python
 sudo pip install biopython
 

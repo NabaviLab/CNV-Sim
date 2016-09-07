@@ -11,11 +11,23 @@ from cnvsim.fileio import *
 from cnvsim.exome_simulator import *
 from cnvsim.genome_simulator import *
 
+class CapitalisedHelpFormatter(argparse.HelpFormatter):
+    def add_usage(self, usage, actions, groups, prefix=None):
+        if prefix is None:
+            prefix = 'Usage: '
+            return super(CapitalisedHelpFormatter, self).add_usage(usage, actions, groups, prefix)
+
 def log(message):
     print '[CNV SIM {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()) + "] " + message
 
+
 def main():
-    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(add_help=True, formatter_class=CapitalisedHelpFormatter, \
+                                     description='Generates NGS short reads that encompass copy number variations in whole genome and targeted exome sequencing')
+    parser._positionals.title = 'Positional arguments'
+    parser._optionals.title = 'Optional arguments'
+    parser.add_argument('-v', '--version', action='version', version = 'CNV-Sim v0.9.2', help = "Show program's version number and exit.")
+
     parser.add_argument("simulation_type", type=str, choices=['genome', 'exome'], \
                         help="simulate copy number variations in whole genome or exome regions")
     parser.add_argument("genome", type=file, \
@@ -35,7 +47,7 @@ def main():
     cnv_sim_group = parser.add_argument_group('CNV list parameters', "parameters to be used if CNV list is not passed")
     cnv_sim_group.add_argument("-g", "--regions_count", type=int, default=20, \
                         help="number of CNV regions to be generated randomly")
-    cnv_sim_group.add_argument("-r_min", "--region_minimum_length", type=int, default=100, \
+    cnv_sim_group.add_argument("-r_min", "--region_minimum_length", type=int, default=1000, \
                                help="minimum length of each CNV region")
     cnv_sim_group.add_argument("-r_max", "--region_maximum_length", type=int, default=100000, \
                                help="maximum length of each CNV region")
