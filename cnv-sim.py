@@ -11,11 +11,13 @@ from cnvsim.fileio import *
 from cnvsim.exome_simulator import *
 from cnvsim.genome_simulator import *
 
-class CapitalisedHelpFormatter(argparse.HelpFormatter):
+
+class CapitalisedHelpFormatter(argparse.ArgumentDefaultsHelpFormatter):
     def add_usage(self, usage, actions, groups, prefix=None):
         if prefix is None:
             prefix = 'Usage: '
             return super(CapitalisedHelpFormatter, self).add_usage(usage, actions, groups, prefix)
+
 
 def log(message):
     print '[CNV SIM {:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()) + "] " + message
