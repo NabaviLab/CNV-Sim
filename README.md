@@ -89,7 +89,7 @@ Positional arguments:
                         exome regions
   genome                path to the referece genome file in FASTA format
   target                path to the target regions file in BED format (if
-                        using exome)
+                        using exome) (default: None)
 
 Optional arguments:
   -h, --help            show this help message and exit
@@ -97,31 +97,39 @@ Optional arguments:
   -o OUTPUT_DIR_NAME, --output_dir_name OUTPUT_DIR_NAME
                         a name to be used to create the output directory
                         (overrides existing directory with the same name).
+                        (default: simulation_output)
   -n N_READS, --n_reads N_READS
-                        total number of reads without variations
+                        total number of reads without variations (default:
+                        10000)
   -l READ_LENGTH, --read_length READ_LENGTH
-                        read length (bp)
+                        read length (bp) (default: 100)
   --cnv_list CNV_LIST   path to a CNV list file in BED format chr | start |
                         end | variation. If not passed, it is randomly
-                        generated using CNV list parameters below
+                        generated using CNV list parameters below (default:
+                        None)
 
 CNV list parameters:
   parameters to be used if CNV list is not passed
 
   -g REGIONS_COUNT, --regions_count REGIONS_COUNT
                         number of CNV regions to be generated randomly
+                        (default: 20)
   -r_min REGION_MINIMUM_LENGTH, --region_minimum_length REGION_MINIMUM_LENGTH
-                        minimum length of each CNV region
+                        minimum length of each CNV region (default: 1000)
   -r_max REGION_MAXIMUM_LENGTH, --region_maximum_length REGION_MAXIMUM_LENGTH
-                        maximum length of each CNV region
+                        maximum length of each CNV region (default: 100000)
   -a AMPLIFICATIONS, --amplifications AMPLIFICATIONS
                         percentage of amplifications in range [0.0: 1.0].
+                        (default: 0.5)
   -d DELETIONS, --deletions DELETIONS
-                        percentage of deletions in range [0.0: 1.0].
+                        percentage of deletions in range [0.0: 1.0]. (default:
+                        0.5)
   -cn_min COPY_NUMBER_MINIMUM, --copy_number_minimum COPY_NUMBER_MINIMUM
                         minimum level of variations (copy number) introduced
+                        (default: 3)
   -cn_max COPY_NUMBER_MAXIMUM, --copy_number_maximum COPY_NUMBER_MAXIMUM
                         maximum level of variation (copy number) introduced
+                        (default: 10)
 ```
 
 ## Contributor
