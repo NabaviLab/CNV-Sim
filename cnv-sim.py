@@ -91,6 +91,12 @@ def main():
         log("ERROR: percentage of amplifications + percentage of deletions must be equal to 1.0")
         exit()
 
+    # divide the input reference into chromosomes
+    
+    # divide the input targets into chromosomes
+    
+    # modify the simulation parameters to indicate the new path of reference files and target files.
+    
     if simulation_parameters['type'] == 'genome':
         simulate_genome_cnv(simulation_parameters, cnv_list_parameters)
     else:
