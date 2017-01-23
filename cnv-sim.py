@@ -100,7 +100,11 @@ def main():
     cnv_list_parameters['snp'] = args.snp
     cnv_list_parameters['indel'] = args.indel
     
+    # layer 1: simulates SNPs
     simulation_parameters = simulate_snp(simulation_parameters)
+
+    # layer 2: simulates indels
+    simulation_parameters = simulate_indels(simulation_parameters)
 
     if simulation_parameters['type'] == 'genome':
         simulate_genome_cnv(simulation_parameters, cnv_list_parameters)
