@@ -205,7 +205,7 @@ def simulate_exome_cnv(simulation_parameters, cnv_list_parameters=None):
         os.makedirs(simulation_parameters['output_dir'])
 
     if simulation_parameters['target_file'] is None:
-        _log("ERROR: target file cannot be None for target exome simulation!")
+        _log("ERROR: target file cannot be None for targeted exome simulation!")
         fileio.clean(simulation_parameters['output_dir'])
         fileio.clean(simulation_parameters['tmp_dir'])
         exit()

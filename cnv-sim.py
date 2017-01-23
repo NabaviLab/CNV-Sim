@@ -26,17 +26,17 @@ def main():
                                      description='Generates NGS short reads that encompass copy number variations in whole genome and targeted exome sequencing')
     parser._positionals.title = 'Positional arguments'
     parser._optionals.title = 'Optional arguments'
-    parser.add_argument('-v', '--version', action='version', version = 'CNV-Sim v0.9.2', help = "Show program's version number and exit.")
+    parser.add_argument('-v', '--version', action='version', version = 'CNV-Sim v1.0.0', help = "Show program's version number and exit.")
 
-    parser.add_argument("simulation_type", type=str, choices=['genome', 'exome'], \
-                        help="simulate copy number variations in whole genome or exome regions")
+    parser.add_argument("simulation_type", type=str, choices=['exome', 'genome'], \
+                        help="simulate copy number variations in targeted exomes or whole genome")
     parser.add_argument("genome", type=file, \
                         help="path to the referece genome file in FASTA format ")
     parser.add_argument("target", type=file, nargs='?', default=None, \
                         help="path to the target regions file in BED format (if using exome)")
 
     parser.add_argument("-o", "--output_dir_name",type=str, default="simulation_output", \
-                        help="a name to be used to create the output directory (overrides existing directory with the same name).")
+                        help="a name to be used to create the output directory (overrides existing directory with the same name)")
     parser.add_argument("-n", "--n_reads", type=int, default=10000, \
                         help="total number of reads without variations")
     parser.add_argument("-l", "--read_length", type=int, default=100, \
@@ -51,14 +51,20 @@ def main():
                                help="minimum length of each CNV region")
     cnv_sim_group.add_argument("-r_max", "--region_maximum_length", type=int, default=100000, \
                                help="maximum length of each CNV region")
-    cnv_sim_group.add_argument("-a", "--amplifications", type=float, default=0.50, \
+    cnv_sim_group.add_argument("-a", "--amplifications", type=float, default=0.30, \
                         help="percentage of amplifications in range [0.0: 1.0].")
-    cnv_sim_group.add_argument("-d", "--deletions", type=float, default=0.50, \
+    cnv_sim_group.add_argument("-d", "--deletions", type=float, default=0.20, \
                         help="percentage of deletions in range [0.0: 1.0].")
     cnv_sim_group.add_argument("-cn_min", "--copy_number_minimum", type=float, default=3, \
                         help="minimum level of variations (copy number) introduced")
     cnv_sim_group.add_argument("-cn_max", "--copy_number_maximum", type=float, default=10, \
                         help="maximum level of variation (copy number) introduced")
+
+    cnv_sim_group = parser.add_argument_group('Tumor parameters', "parameters to describe tumor complexity")
+    cnv_sim_group.add_argument("-snp", "--snp_rate", type=float, default=0.1, \
+                        help="rate of structural variations represented as SNPs")
+    cnv_sim_group.add_argument("-indel", "--indel_rate", type=float, default=0.1, \
+                        help="rate of structural variations represented as insertions/deletions")
 
     args = parser.parse_args()
 
@@ -87,15 +93,11 @@ def main():
     cnv_list_parameters['minimum_variations'] = args.copy_number_minimum
     cnv_list_parameters['maximum_variations'] = args.copy_number_maximum
 
-    if cnv_list_parameters['amplifications'] + cnv_list_parameters['deletions'] != 1.0:
-        log("ERROR: percentage of amplifications + percentage of deletions must be equal to 1.0")
+    if cnv_list_parameters['amplifications'] + cnv_list_parameters['deletions'] > 1.0:
+        log("ERROR: percentage of amplifications + percentage of deletions must be less than or equal to 1.0")
         exit()
-
-    # divide the input reference into chromosomes
-    
-    # divide the input targets into chromosomes
-    
-    # modify the simulation parameters to indicate the new path of reference files and target files.
+    cnv_list_parameters['snp'] = args.snp
+    cnv_list_parameters['indel'] = args.indel
     
     if simulation_parameters['type'] == 'genome':
         simulate_genome_cnv(simulation_parameters, cnv_list_parameters)
