@@ -10,6 +10,7 @@ import shutil
 from cnvsim.fileio import *
 from cnvsim.exome_simulator import *
 from cnvsim.genome_simulator import *
+from cnvsim.sv_simulator import *
 
 class CapitalisedHelpFormatter(argparse.HelpFormatter):
     def add_usage(self, usage, actions, groups, prefix=None):
@@ -99,6 +100,8 @@ def main():
     cnv_list_parameters['snp'] = args.snp
     cnv_list_parameters['indel'] = args.indel
     
+    simulation_parameters = simulate_snp(simulation_parameters)
+
     if simulation_parameters['type'] == 'genome':
         simulate_genome_cnv(simulation_parameters, cnv_list_parameters)
     else:
