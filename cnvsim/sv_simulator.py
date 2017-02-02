@@ -78,6 +78,15 @@ def simulate_snp(simulation_parameters):
     return simulation_parameters
 
 
+def _generateRandomIndel():
+    indel = ''
+    nucleotides = ['A', 'C', 'G', 'T']
+    length = random.randint(2, 50)
+    for _ in range(length):
+        indel += random.choice(nucleotides)
+    return indel
+
+
 def _simulateIndels(genome, targets, rate):
     '''
     Introduce indels to the original genome reference as per the rate specified by the user
@@ -89,9 +98,37 @@ def _simulateIndels(genome, targets, rate):
     number_of_indels = int(rate * len(genome))
     positions = [random.randint(0, len(genome)) for _ in range(number_of_indels)]
 
-    # complete here ya Abdo
+    # perform insertions first to avoid index error when deleting
+    number_of_insertions = random.randint(1, len(positions))
+    number_of_deletios = len(positions) - number_of_insertions
+    offset = 0
 
-    return genome, targets
+    # insertions
+    for _ in range(number_of_insertions):
+        random.shuffle(positions)
+        index_to_insert = positions[0]
+        indel_to_insert = _generateRandomIndel()
+        genome = genome[:index_to_insert] + indel_to_insert + genome[index_to_insert:]
+        positions.pop(0)
+        offset += len(indel_to_insert)
+
+    # deletions
+    for _ in range(number_of_deletios):
+        random.shuffle(positions)
+        index_to_delete = positions[0]
+        deletion_length = random.randint(2, 50)
+        genome = genome[:index_to_delete] + genome[index_to_delete + deletion_length:]
+        positions.pop(0)
+        offset -= deletion_length
+
+    # modify the targets
+    modified_targets = []
+    for target in targets:
+        new_target = (target[0], target[1]+offset, target[2]+offset)
+        modified_targets.append(new_target)
+
+    return genome, modified_targets
+
 
 def simulate_indels(simulation_parameters):
     '''
@@ -99,7 +136,7 @@ def simulate_indels(simulation_parameters):
     :param simulation_parameters: the dictionary of all simulation parameters
     :return: modified dictionary of the simulation parameters
     '''
-    _log('simulating SNPs ..')
+    _log('simulating indels ..')
 
     # create a temporary directory for intermediate files
     if not os.path.exists(simulation_parameters['tmp_dir']):
