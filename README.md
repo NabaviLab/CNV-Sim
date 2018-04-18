@@ -1,6 +1,3 @@
-THIS REPOSITORY IS DEPRICATED AND WILL NO LONGER BE MAINTAINED!
-CHECK OUR REPLACEMENT FOR THIS TOOL at [https://github.com/NabaviLab/VarSimLab](https://github.com/NabaviLab/VarSimLab)
-
 # Copy Number Variation Simulator (CNV-Sim)
 In genomics, Copy Number Variations (CNVs) is a type of structural variation in a genome where sections of the genome are duplicated or deleted. 
 The number of variations (duplications/deletions) varies between individuals in the human population.
