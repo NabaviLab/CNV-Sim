@@ -181,7 +181,7 @@ def simulate_genome_cnv(simulation_parameters, cnv_list_parameters=None):
         cnv_list = map(lambda l: [header.replace('>', '')] + l, cnv_list)
 
         with open(cnv_list_file, 'w') as f:
-            line = 'chrom\tchr_start\tchrom_stop\tnum_positions\tcopy_number\n'
+            line = '# chr\tchr_start\tchr_stop\tnum_positions\tcopy_number\n'
             f.write(line)
             for i, cnv_region in enumerate(cnv_list):
                 num_positions = cnv_region[2] - cnv_region[1] + 1
@@ -208,7 +208,7 @@ def simulate_genome_cnv(simulation_parameters, cnv_list_parameters=None):
     # call ART to generate reads from the genome file
     _log("generating reads for the genome ..")
     _log("delegating job to ART ...")
-    _callART(genome_file, base_reads_file, simulation_parameters['read_length'])
+    _callART(genome_file, base_reads_file, simulation_parameters['read_length'], fold_coverage=simulation_parameters['coverage'])
 
     _log("simulating copy number variations (amplifications/deletions)")
     control_genome, cnv_genome = _simulateCNV(genome, cnv_list, simulation_parameters['read_length'])
@@ -223,7 +223,7 @@ def simulate_genome_cnv(simulation_parameters, cnv_list_parameters=None):
             fw.write(line + "\n")
 
     _log("delegating job to ART ...")
-    _callART(control_genome_file, control_reads_file, simulation_parameters['read_length'])
+    _callART(control_genome_file, control_reads_file, simulation_parameters['read_length'], fold_coverage=simulation_parameters['coverage'])
 
     _log("saving to the CNV genome file ..")
     with open(cnv_genome_file, 'w') as fw:
@@ -234,7 +234,7 @@ def simulate_genome_cnv(simulation_parameters, cnv_list_parameters=None):
             fw.write(line + "\n")
 
     _log("delegating job to ART ...")
-    _callART(cnv_genome_file, cnv_reads_file, simulation_parameters['read_length'])
+    _callART(cnv_genome_file, cnv_reads_file, simulation_parameters['read_length'], fold_coverage=simulation_parameters['coverage'])
 
     _log("merging results ..")
     fileio.mergeARTReads(simulation_parameters['tmp_dir'], simulation_parameters['output_dir'])
