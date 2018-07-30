@@ -45,6 +45,8 @@ def main():
                         help="read length (bp)")
     parser.add_argument("--cnv_list", type=file, default=None, \
                         help="path to a CNV list file in BED format chr | start | end | variation. If not passed, it is randomly generated using CNV list parameters below")
+    parser.add_argument("--coverage", type=int, default=1, \
+                        help="the integer average depth of coverage of a genome for the reads (only on whole genome simulation)")
 
     cnv_sim_group = parser.add_argument_group('CNV list parameters', "parameters to be used if CNV list is not passed")
     cnv_sim_group.add_argument("-g", "--regions_count", type=int, default=20, \
@@ -79,6 +81,7 @@ def main():
     else:
         simulation_parameters['cnv_list_file'] = None
     simulation_parameters['tmp_dir'] = os.path.join(os.getcwd(), args.output_dir_name , "tmp")
+    simulation_parameters['coverage'] = args.coverage
 
     cnv_list_parameters = {}
     cnv_list_parameters['regions_count'] = args.regions_count
