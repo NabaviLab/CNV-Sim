@@ -181,7 +181,7 @@ def simulate_genome_cnv(simulation_parameters, cnv_list_parameters=None):
         cnv_list = map(lambda l: [header.replace('>', '')] + l, cnv_list)
 
         with open(cnv_list_file, 'w') as f:
-            line = 'chrom\tchr_start\tchrom_stop\tnum_positions\tcopy_number\n'
+            line = '# chr\tchr_start\tchr_stop\tnum_positions\tcopy_number\n'
             f.write(line)
             for i, cnv_region in enumerate(cnv_list):
                 num_positions = cnv_region[2] - cnv_region[1] + 1
