@@ -1,5 +1,5 @@
 # Copy Number Variation Simulator (CNV-Sim)
-In genomics, Copy Number Variations (CNVs) is a type of structural variation in a genome where sections of the genome are duplicated or deleted. 
+In genomics, Copy Number Variations (CNVs) are a type of structural variation in a genome where sections of the genome are duplicated or deleted. 
 The number of variations (duplications/deletions) varies between individuals in the human population.
 
 The Copy Number Variation Simulator (CNV-Sim) is a simulation tool that extends the functionality of existing next-generation sequencing read simulators 
@@ -28,10 +28,10 @@ Refer to the below [CNV-Sim options](#cnv-sim-options) section for more details 
 
 
 ### Download as a Docker image
-We prefer that you run CNV-Sim from the [Docker](http://www.docker.com) container as it has all the dependencies installed inside yet; no need to go through any of the setup scripts included here.
+We prefer that you run CNV-Sim from the [Docker](http://www.docker.com) container as it has all the dependencies installed inside already; no need to go through any of the setup scripts included here.
 
 **New to Docker?** Read this [blog post](https://www.toptal.com/devops/getting-started-with-docker-simplifying-devops) to understand how it works
-(yet you don't need to be a Docker expert to get CNV-Sim Docker container running!).
+(you don't need to be a Docker expert to get CNV-Sim Docker container running!).
 
 **Install Docker:** [Linux](https://docs.docker.com/engine/installation/#/on-linux), [Mac OS](https://docs.docker.com/docker-for-mac/) and [Windows](https://docs.docker.com/docker-for-windows/)
 
@@ -61,7 +61,7 @@ Download it from the Galaxy Tool Shed: [https://toolshed.g2.bx.psu.edu/view/ahos
 
 
 ## Required Input
-**IMPORTANT:** for the current version of CNV-Sim, the underlying *pysam* library used Wessim might not be able to handle large reference files (such as the whole human genome) when introducing amplifications. To avoid errors, simulate CNV in one chromosome at a time (reference and target for one chromosome in a single run). We are working on handling large files seamlessly and will be released in the next version.
+**IMPORTANT:** for the current version of CNV-Sim, the underlying *pysam* library used by Wessim might not be able to handle large reference files (such as the whole human genome) when introducing amplifications. To avoid errors, simulate CNVs in one chromosome at a time (reference and target for one chromosome in a single run). We are working on handling large files seamlessly and this fix will be released in the next version.
 
 ### whole genome
 - Reference genome in [FASTA](https://en.wikipedia.org/wiki/FASTA_format) format.
