@@ -50,7 +50,7 @@ where:
 - `<target_file>` is the BED file name for the targets (only if using exome as the simulation type)
 
 Refer to the below [CNV-Sim options](#cnv-sim-options) section for more details on how to use all available command-line options or 
-simply type: ```docker run nabavilab/cnv-sim ./cnv-sim -h``` to read the help.
+simply type: ```docker run nabavilab/cnv-sim.py ./cnv-sim -h``` to read the help.
 
 
 ### Use from Galaxy
